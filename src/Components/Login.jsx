@@ -14,7 +14,7 @@ import Mensaje from './Mensaje';
             const data = await response.json();
             return data; 
     }
-    
+
     const validateLogin = (data) => {
         const usuarioEncontrado = data.find(user => user.email === usuario); 
 
