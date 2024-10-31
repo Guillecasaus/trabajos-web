@@ -1,94 +1,89 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import DatosPersonales from './DatosPersonales';
+import InformacionContacto from './InformacionContacto';
+import PreferenciasEntrenamiento from './PreferenciasEntrenamiento';
+import DatosPago from './DatosPago';
+import styles from '../Styles/form.module.css';
 
-const FormularioPrincipal = () => {
-    const formik = useFormik({
-        initialValues: {
-            nombre: '',
-            email: '',
-            telefono: '',
-            direccion:'',
-            ciudad:'',
-            codigoPostal:'',
-            tipoEntrenamiento: '',
-            objetivos: '',
-            disponibilidad: '',
-        },
-        validationSchema: Yup.object({
-            nombre: Yup.string().required('El nombre es obligatorio'),
-            email: Yup.string().email('Introduce un email válido').required('El email es obligatorio'),
-            telefono: Yup.string().required('El teléfono es obligatorio'),
-            direccion: Yup.string().required('Direccion obligatoria'),
-            ciudad: Yup.string().required('Ciudad es obligatoria'),
-            códigoPostal: Yup.string().required('Código postal obligatorio'),
-            tipoEntrenamiento: Yup.string().required('Selecciona un tipo de entrenamiento'),
-            objetivos: Yup.string().required('Selecciona un objetivo de fitness'),
-            disponibilidad: Yup.string().required('Selecciona tu disponibilidad'),
-        }),
-        onSubmit: (values) => {
-            console.log('Formulario enviado:', values);
-        },
+const enviarDatosAPI = async (datos, setMensaje) => {
+  try {
+    const respuesta = await fetch('https://api.fitlife.com/registro', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(datos),
     });
 
-    return (
-        <form onSubmit={formik.handleSubmit}>
-            <h3>Registro en FitLife</h3>
+    if (respuesta.ok) {
+      setMensaje('Usuario registrado correctamente');
+    } else {
+      setMensaje('Error al registrar usuario');
+    }
+  } catch (error) {
+    setMensaje('Error en la conexión al servidor');
+  }
+};
 
-            <input type="text" name="nombre" value={formik.values.nombre} onChange={formik.handleChange} placeholder="Nombre"/>
-            {formik.errors.nombre && <p className="error">{formik.errors.nombre}</p>}
-            <br></br>
+const FormularioPrincipal = () => {
+  const [mensaje, setMensaje] = useState(''); 
 
-            <input type="text" name="email" value={formik.values.email} onChange={formik.handleChange} placeholder="Email"/>
-            {formik.errors.email && <p className="error">{formik.errors.email}</p>}
-            <br></br>
+  const formik = useFormik({
+    initialValues: {
+      nombre: '',
+      email: '',
+      telefono: '',
+      direccion: '',
+      ciudad: '',
+      codigoPostal: '',
+      tipoEntrenamiento: '',
+      objetivos: '',
+      disponibilidad: '',
+      metodoPago: '',
+      numeroTarjeta: '',
+      equipoAdicional: '', 
+    },
+    validationSchema: Yup.object({
+      nombre: Yup.string().required('El nombre es obligatorio'),
+      email: Yup.string().email('Introduce un email válido').required('El email es obligatorio'),
+      telefono: Yup.string()
+        .matches(/^\d+$/, 'Introduce solo números en el teléfono')
+        .required('El teléfono es obligatorio'),
+      direccion: Yup.string().required('Dirección obligatoria'),
+      ciudad: Yup.string().required('La ciudad es obligatoria'),
+      codigoPostal: Yup.string().required('Código postal obligatorio'),
+      tipoEntrenamiento: Yup.string().required('Selecciona un tipo de entrenamiento'),
+      objetivos: Yup.string().required('Selecciona un objetivo de fitness'),
+      disponibilidad: Yup.string().required('Selecciona tu disponibilidad'),
+      metodoPago: Yup.string().required('Selecciona un método de pago'),
+      numeroTarjeta: Yup.string()
+        .matches(/^\d{16}$/, 'El número de tarjeta debe tener 16 dígitos')
+        .required('Número de tarjeta es obligatorio'),
+      equipoAdicional: Yup.string(), 
+    }),
+    onSubmit: (values) => {
+      enviarDatosAPI(values, setMensaje);  
+    },
+  });
 
-            <input type="text" name="telefono" value={formik.values.telefono} onChange={formik.handleChange} placeholder="Telefono"/>
-            {formik.errors.telefono && <p className="error">{formik.errors.telefono}</p>}
-            <br></br>
+  return (
+    <form onSubmit={formik.handleSubmit} className={styles.formulario}>
+      <h3 className={styles.titulo}>Registro en FitLife</h3>
+      
+      <DatosPersonales formik={formik} />
+      <InformacionContacto formik={formik} />
+      <PreferenciasEntrenamiento formik={formik} />
+      <DatosPago formik={formik} />
 
-            <input type="text" name="direccion" value={formik.values.direccion} onChange={formik.handleChange} placeholder="Dirección"/>
-            {formik.errors.direccion && <p className="error">{formik.errors.direccion}</p>}
-            <br></br>
+      <button type="submit" className={styles.boton}>
+        Enviar
+      </button>
 
-            <input type="text" name="ciudad" value={formik.values.ciudad} onChange={formik.handleChange} placeholder="Ciudad"/>
-            {formik.errors.ciudad && <p className="error">{formik.errors.ciudad}</p>}
-            <br></br>
-
-            <input type="text" name="codigoPostal" value={formik.values.codigoPostal} onChange={formik.handleChange} placeholder="Código Postal"/>
-            {formik.errors.codigoPostal && <p className="error">{formik.errors.codigoPostal}</p>}
-            <br></br>
-
-            <select name="tipoEntrenamiento" value={formik.values.tipoEntrenamiento} onChange={formik.handleChange}>
-                <option value="">Selecciona un tipo de entrenamiento</option>
-                <option value="cardio">Cardio</option>
-                <option value="fuerza">Fuerza</option>
-                <option value="yoga">Yoga</option>
-            </select>
-            {formik.errors.tipoEntrenamiento && <p className="error">{formik.errors.tipoEntrenamiento}</p>}
-            <br></br>
-
-            <select name="objetivos" value={formik.values.objetivos} onChange={formik.handleChange}>
-                <option value="">Selecciona un objetivo</option>
-                <option value="perderPeso">Perder Peso</option>
-                <option value="ganarMasa">Ganar Masa Muscular</option>
-                <option value="mejorarResistencia">Mejorar Resistencia</option>
-            </select>
-            {formik.errors.objetivos && <p className="error">{formik.errors.objetivos}</p>}
-            <br></br>
-
-            <select name="disponibilidad" value={formik.values.disponibilidad} onChange={formik.handleChange}>
-                <option value="">Selecciona tu disponibilidad</option>
-                <option value="mañana">Mañana</option>
-                <option value="tarde">Tarde</option>
-                <option value="noche">Noche</option>
-            </select>
-            {formik.errors.disponibilidad && <p className="error">{formik.errors.disponibilidad}</p>}
-            <br></br>
-
-            <button type="submit">Enviar</button>
-        </form>
-    );
+      {mensaje && <p className={mensaje.includes('Error') ? styles.error : styles.exito}>{mensaje}</p>}
+    </form>
+  );
 };
 
 export default FormularioPrincipal;
