@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import APIMarvel from './APIMarvel';
+import { obtenerComics, obtenerDetallesComics } from './APIMarvel';
+
 
 const ListaComics = () => {
     const [comics, setComics] = useState([]);
@@ -8,7 +9,7 @@ const ListaComics = () => {
 
     const obtenerListaComics = async () => {
         try {
-            const datos = await APIMarvel.obtenerComics();
+            const datos = await obtenerComics();
             if (datos) {
                 setComics(datos);
             } else {
@@ -21,7 +22,7 @@ const ListaComics = () => {
 
     const seleccionarComic = async (comicId) => {
         try {
-            const detalles = await APIMarvel.o(comicId);
+            const detalles = await obtenerDetallesComics(comicId);
             if (detalles) {
                 setDetallesComic(detalles);
             } else {
