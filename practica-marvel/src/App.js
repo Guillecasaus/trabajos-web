@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import ListaComics from './listaComics';
+import ListaComics from './components/listaComics';
 
 function App() {
   return (

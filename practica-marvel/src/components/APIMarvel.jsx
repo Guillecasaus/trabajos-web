@@ -7,7 +7,6 @@ const ts = 100;
 const hash = md5(ts + privateKey + publicKey);
 const baseUrl = 'https://gateway.marvel.com/v1/public';
 
-// Función para obtener la lista de cómics
 export const obtenerComics = async () => {
     try {
         const response = await fetch(`${baseUrl}/comics?ts=${ts}&apikey=${publicKey}&hash=${hash}`);
@@ -19,7 +18,6 @@ export const obtenerComics = async () => {
     }
 };
 
-// Función para obtener los detalles de un cómic específico
 export const obtenerDetallesComics = async (comicId) => {
     try {
         const response = await fetch(`${baseUrl}/comics/${comicId}?ts=${ts}&apikey=${publicKey}&hash=${hash}`);
@@ -31,7 +29,6 @@ export const obtenerDetallesComics = async (comicId) => {
     }
 };
 
-// Componente APIMarvel
 const APIMarvel = () => {
     const [comics, setComics] = useState([]);
     const [comicDetails, setComicDetails] = useState(null);
