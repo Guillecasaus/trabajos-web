@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { obtenerComics, obtenerDetallesComics } from './APIMarvel';
+import styles from '../Styles/comics.module.css';
 
 const obtenerFavoritos = () => {
     return JSON.parse(localStorage.getItem('favoritos')) || [];
@@ -66,42 +67,65 @@ const ListaComics = () => {
     };
 
     return (
-        <div>
-            <h2>Lista de Cómics</h2>
-            <button onClick={obtenerListaComics}>Cargar Cómics</button>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            {comics.length > 0 ? (
-                comics.map((comic) => (
-                    <div key={comic.id}>
-                        <h4>{comic.title}</h4>
-                        <button onClick={() => seleccionarComic(comic.id)}>Ver Detalles</button>
-                        <button onClick={() => manejarAgregarFavorito(comic)}>Agregar a Favoritos</button>
-                    </div>
-                ))
-            ) : (
-                <p>No se han cargado cómics. Haz clic en el botón para cargar.</p>
-            )}
+        <div className={styles.container}>
+            <h2 className={styles.header}>Lista de Cómics</h2>
+            <button onClick={obtenerListaComics} className={styles.button}>Cargar Cómics</button>
+            {error && <p className={styles.error}>{error}</p>}
+            <div className={styles.gridContainer}>
+                {comics.length > 0 ? (
+                    comics.map((comic) => (
+                        <div key={comic.id} className={styles.comic}>
+                            <h4>{comic.title}</h4>
+                            <button onClick={() => seleccionarComic(comic.id)} className={styles.button}>Ver Detalles</button>
+                            <button onClick={() => manejarAgregarFavorito(comic)} className={styles.button}>Agregar a Favoritos</button>
+                        </div>
+                    ))
+                ) : (
+                    <p>No se han cargado cómics. Haz clic en el botón para cargar.</p>
+                )}
+            </div>
             {detallesComic && (
-                <div>
+                <div className={styles.comicDetails}>
                     <h2>Detalles de {detallesComic.title}</h2>
                     <img
                         src={`${detallesComic.thumbnail.path}.${detallesComic.thumbnail.extension}`}
                         alt={detallesComic.title}
                     />
                     <p>{detallesComic.description || 'Sin descripción disponible'}</p>
+                    <h3>Personajes:</h3>
+                    {detallesComic.personajes && detallesComic.personajes.length > 0 ? (
+                        detallesComic.personajes.map((character, index) => (
+                            <div key={index} className={styles.character}>
+                                <p>{character.name}</p>
+                                {character.thumbnail && character.thumbnail.path && character.thumbnail.extension ? (
+                                    <img
+                                        src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
+                                        alt={character.name}
+                                        className={styles.characterImage}
+                                    />
+                                ) : (
+                                    <p>Imagen no disponible</p> // Muestra un texto o una imagen de marcador de posición si no hay imagen disponible
+                                )}
+                            </div>
+                        ))
+                    ) : (
+                        <p>No hay personajes disponibles.</p>
+                    )}
                 </div>
             )}
-            <h2>Favoritos</h2>
-            {favoritos.length > 0 ? (
-                favoritos.map((fav) => (
-                    <div key={fav.id}>
-                        <h4>{fav.title}</h4>
-                        <button onClick={() => manejarEliminarFavorito(fav.id)}>Eliminar de Favoritos</button>
-                    </div>
-                ))
-            ) : (
-                <p>No hay cómics en favoritos.</p>
-            )}
+            <div className={styles.favoritos}>
+                <h2>Favoritos</h2>
+                {favoritos.length > 0 ? (
+                    favoritos.map((fav) => (
+                        <div key={fav.id}>
+                            <h4>{fav.title}</h4>
+                            <button onClick={() => manejarEliminarFavorito(fav.id)} className={styles.button}>Eliminar de Favoritos</button>
+                        </div>
+                    ))
+                ) : (
+                    <p>No hay cómics en favoritos.</p>
+                )}
+            </div>
         </div>
     );
 };

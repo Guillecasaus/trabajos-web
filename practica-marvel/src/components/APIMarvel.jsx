@@ -22,12 +22,30 @@ export const obtenerDetallesComics = async (comicId) => {
     try {
         const response = await fetch(`${baseUrl}/comics/${comicId}?ts=${ts}&apikey=${publicKey}&hash=${hash}`);
         const data = await response.json();
-        return data.data ? data.data.results[0] : null;
+        if (data.data) {
+            const comic = data.data.results[0];
+
+            const personajesResponse = await fetch(`${baseUrl}/comics/${comicId}/characters?ts=${ts}&apikey=${publicKey}&hash=${hash}`);
+            const personajesData = await personajesResponse.json();
+
+            if (personajesData.data) {
+                comic.personajes = personajesData.data.results.map((personaje) => {
+                    return {
+                        name: personaje.name,
+                        thumbnail: personaje.thumbnail ? personaje.thumbnail : null // Asegura que `thumbnail` existe
+                    };
+                });
+            }
+
+            return comic;
+        }
+        return null;
     } catch (error) {
         console.error('Error en la obtención de los detalles del cómic:', error);
         return null;
     }
 };
+
 
 const APIMarvel = () => {
     const [comics, setComics] = useState([]);
