@@ -34,7 +34,7 @@
 }
 
 .comic img {
-    max-width: 100%;
+    max-width: 75%;
     height: auto;
     border-radius: 10px;
     margin-bottom: 10px;
@@ -72,4 +72,29 @@
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+.comic:hover {
+    transform: scale(1.025);
+    transition: transform 0.5s;
+}
+
+.characterGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.characterImage {
+    width: 50%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cargar-comics {
+    margin-top: 20px;
+    text-align: center;
+}
+
 

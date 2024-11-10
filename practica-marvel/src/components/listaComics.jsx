@@ -81,7 +81,7 @@ const ListaComics = () => {
                         </div>
                     ))
                 ) : (
-                    <p>No se han cargado cómics. Haz clic en el botón para cargar.</p>
+                    <p className={styles.cargar - comics}>No se han cargado cómics. Haz clic en el botón para cargar.</p>
                 )}
             </div>
             {detallesComic && (
@@ -94,20 +94,24 @@ const ListaComics = () => {
                     <p>{detallesComic.description || 'Sin descripción disponible'}</p>
                     <h3>Personajes:</h3>
                     {detallesComic.personajes && detallesComic.personajes.length > 0 ? (
-                        detallesComic.personajes.map((character, index) => (
-                            <div key={index} className={styles.character}>
-                                <p>{character.name}</p>
-                                {character.thumbnail && character.thumbnail.path && character.thumbnail.extension ? (
-                                    <img
-                                        src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
-                                        alt={character.name}
-                                        className={styles.characterImage}
-                                    />
-                                ) : (
-                                    <p>Imagen no disponible</p> // Muestra un texto o una imagen de marcador de posición si no hay imagen disponible
-                                )}
-                            </div>
-                        ))
+                        <div className={styles.characterGrid}>
+                            {detallesComic.personajes.map((character, index) => (
+                                <div key={index} className={styles.character}>
+                                    <p>{character.name}</p>
+                                    {character.thumbnail && character.thumbnail.path && character.thumbnail.extension ? (
+                                        <img
+                                            src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
+                                            alt={character.name}
+                                            className={styles.characterImage}
+                                            onClick={() => window.location.href = `/characters/${character.id}`} 
+                                            style={{ cursor: 'pointer' }} 
+                                        />
+                                    ) : (
+                                        <p>Imagen no disponible</p>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
                     ) : (
                         <p>No hay personajes disponibles.</p>
                     )}
