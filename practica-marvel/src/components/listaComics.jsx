@@ -103,7 +103,7 @@ const ListaComics = () => {
                                             src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
                                             alt={character.name}
                                             className={styles.characterImage}
-                                            onClick={() => window.location.href = `/characters/${character.id}`} 
+                                            onClick={() => window.location.href = `/characters/${character.name}`} 
                                             style={{ cursor: 'pointer' }} 
                                         />
                                     ) : (

@@ -61,9 +61,9 @@ export const obtenerPersonajesPopulares = async () => {
 
 
 //Obtener detalles de un personaje
-export const obtenerDetallesPersonaje = async (personajeId) => {
+export const obtenerDetallesPersonaje = async (nombrePersonaje) => {
     try {
-        const response = await fetch(`${baseUrl}/characters/${personajeId}?ts=${ts}&apikey=${publicKey}&hash=${hash}`);
+        const response = await fetch(`${baseUrl}/characters?name=${encodeURIComponent(nombrePersonaje)}&ts=${ts}&apikey=${publicKey}&hash=${hash}`);
         const data = await response.json();
         return data.data ? data.data.results[0] : null;
     } catch (error) {
@@ -71,6 +71,7 @@ export const obtenerDetallesPersonaje = async (personajeId) => {
         return null;
     }
 };
+
 
 
 const APIMarvel = () => {

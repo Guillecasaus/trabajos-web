@@ -92,6 +92,11 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.characterImage:hover {
+    transform: scale(1.05);
+    transition: transform 0.5s;
+}
+
 .cargar-comics {
     margin-top: 20px;
     text-align: center;

@@ -23,7 +23,7 @@ const PersonajesComic = () => {
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <div className="grid-container">
                 {personajes.map((personaje) => {
-                    console.log('Personaje:', personaje); // Verifica la estructura de cada personaje
+                    console.log('Personaje:', personaje); 
                     return (
                         <div
                             key={personaje.id}

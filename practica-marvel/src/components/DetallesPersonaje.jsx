@@ -1,26 +1,30 @@
-// components/DetallesPersonaje.jsx
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { obtenerDetallesPersonaje } from './APIMarvel';
 
 const DetallesPersonaje = () => {
-    const { id } = useParams();
+    const { id: nombrePersonaje } = useParams(); // Obtiene el nombre del personaje desde la URL
     const [personaje, setPersonaje] = useState(null);
     const [error, setError] = useState('');
 
-    const cargarDetallesPersonaje = async () => {
-        const detalles = await obtenerDetallesPersonaje(id);
-        if (detalles) {
-            setPersonaje(detalles);
-        } else {
-            setError('Error al obtener los detalles del personaje');
+    // Función para cargar los detalles del personaje solo cuando `personaje` es null
+    const cargarDetallesSiEsNecesario = async () => {
+        if (!personaje) {
+            const detalles = await obtenerDetallesPersonaje(nombrePersonaje); // Pasa el nombre en lugar del ID
+            if (detalles) {
+                setPersonaje(detalles);
+            } else {
+                setError('Error al obtener los detalles del personaje');
+            }
         }
     };
+
+    // Llama a la función para cargar los detalles del personaje si aún no están disponibles
+    cargarDetallesSiEsNecesario();
 
     return (
         <div>
             <h2>Detalles del Personaje</h2>
-            <button onClick={cargarDetallesPersonaje}>Cargar Detalles</button>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {personaje ? (
                 <div>
