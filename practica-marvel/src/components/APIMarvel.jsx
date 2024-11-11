@@ -46,20 +46,6 @@ export const obtenerDetallesComics = async (comicId) => {
     }
 };
 
-//Obtener personajes comic
-export const obtenerPersonajesPopulares = async () => {
-    try {
-        const response = await fetch(`${baseUrl}/characters?ts=${ts}&apikey=${publicKey}&hash=${hash}`);
-        const data = await response.json();
-        console.log('Respuesta de la API de personajes populares:', data);
-        return data.data ? data.data.results : null;
-    } catch (error) {
-        console.error('Error en la obtención de personajes populares:', error);
-        return null;
-    }
-};
-
-
 //Obtener detalles de un personaje
 export const obtenerDetallesPersonaje = async (nombrePersonaje) => {
     try {
