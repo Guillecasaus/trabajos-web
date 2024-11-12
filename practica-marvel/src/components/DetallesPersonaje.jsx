@@ -3,14 +3,13 @@ import { useParams } from 'react-router-dom';
 import { obtenerDetallesPersonaje } from './APIMarvel';
 
 const DetallesPersonaje = () => {
-    const { id: nombrePersonaje } = useParams(); // Obtiene el nombre del personaje desde la URL
+    const { id: nombrePersonaje } = useParams(); 
     const [personaje, setPersonaje] = useState(null);
     const [error, setError] = useState('');
 
-    // Función para cargar los detalles del personaje solo cuando `personaje` es null
     const cargarDetallesSiEsNecesario = async () => {
         if (!personaje) {
-            const detalles = await obtenerDetallesPersonaje(nombrePersonaje); // Pasa el nombre en lugar del ID
+            const detalles = await obtenerDetallesPersonaje(nombrePersonaje); 
             if (detalles) {
                 setPersonaje(detalles);
             } else {
@@ -19,7 +18,6 @@ const DetallesPersonaje = () => {
         }
     };
 
-    // Llama a la función para cargar los detalles del personaje si aún no están disponibles
     cargarDetallesSiEsNecesario();
 
     return (

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { obtenerComics, obtenerDetallesComics } from './APIMarvel';
+import VentanaComic from './VentanaComic'; // Importa el componente de la ventana
 import styles from '../Styles/comics.module.css';
 
 const obtenerFavoritos = () => {
@@ -27,6 +28,7 @@ const eliminarDeFavoritos = (comicId) => {
 const ListaComics = () => {
     const [comics, setComics] = useState([]);
     const [detallesComic, setDetallesComic] = useState(null);
+    const [isVentanaComicOpen, setIsVentanaComicOpen] = useState(false); 
     const [error, setError] = useState('');
     const [favoritos, setFavoritos] = useState(obtenerFavoritos());
 
@@ -43,17 +45,23 @@ const ListaComics = () => {
         }
     };
 
-    const seleccionarComic = async (comicId) => {
+    const abrirVentanaComic = async (comicId) => {
         try {
             const detalles = await obtenerDetallesComics(comicId);
             if (detalles) {
                 setDetallesComic(detalles);
+                setIsVentanaComicOpen(true); 
             } else {
                 setError('Error al obtener los detalles del cómic');
             }
         } catch (e) {
             setError('Error en la solicitud de detalles del cómic');
         }
+    };
+
+    const cerrarVentanaComic = () => {
+        setIsVentanaComicOpen(false);
+        setDetallesComic(null);
     };
 
     const manejarAgregarFavorito = (comic) => {
@@ -75,48 +83,25 @@ const ListaComics = () => {
                 {comics.length > 0 ? (
                     comics.map((comic) => (
                         <div key={comic.id} className={styles.comic}>
+                            <img
+                                src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+                                alt={comic.title}
+                                className={styles.comicImage}
+                            />
                             <h4>{comic.title}</h4>
-                            <button onClick={() => seleccionarComic(comic.id)} className={styles.button}>Ver Detalles</button>
+                            <button onClick={() => abrirVentanaComic(comic.id)} className={styles.button}>Ver Detalles</button>
                             <button onClick={() => manejarAgregarFavorito(comic)} className={styles.button}>Agregar a Favoritos</button>
                         </div>
                     ))
                 ) : (
-                    <p className={styles.cargar - comics}>No se han cargado cómics. Haz clic en el botón para cargar.</p>
+                    <p className={styles.cargarComics}>No se han cargado cómics. Haz clic en el botón para cargar.</p>
                 )}
             </div>
-            {detallesComic && (
-                <div className={styles.comicDetails}>
-                    <h2>Detalles de {detallesComic.title}</h2>
-                    <img
-                        src={`${detallesComic.thumbnail.path}.${detallesComic.thumbnail.extension}`}
-                        alt={detallesComic.title}
-                    />
-                    <p>{detallesComic.description || 'Sin descripción disponible'}</p>
-                    <h3>Personajes:</h3>
-                    {detallesComic.personajes && detallesComic.personajes.length > 0 ? (
-                        <div className={styles.characterGrid}>
-                            {detallesComic.personajes.map((character, index) => (
-                                <div key={index} className={styles.character}>
-                                    <p>{character.name}</p>
-                                    {character.thumbnail && character.thumbnail.path && character.thumbnail.extension ? (
-                                        <img
-                                            src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
-                                            alt={character.name}
-                                            className={styles.characterImage}
-                                            onClick={() => window.location.href = `/characters/${character.name}`} 
-                                            style={{ cursor: 'pointer' }} 
-                                        />
-                                    ) : (
-                                        <p>Imagen no disponible</p>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p>No hay personajes disponibles.</p>
-                    )}
-                </div>
+
+            {isVentanaComicOpen && (
+                <VentanaComic detallesComic={detallesComic} cerrarVentana={cerrarVentanaComic} />
             )}
+
             <div className={styles.favoritos}>
                 <h2>Favoritos</h2>
                 {favoritos.length > 0 ? (
