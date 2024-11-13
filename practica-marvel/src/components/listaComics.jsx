@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { obtenerComics, obtenerDetallesComics } from './APIMarvel';
-import VentanaComic from './VentanaComic'; // Importa el componente de la ventana
+import VentanaComic from './VentanaComic'; 
 import styles from '../Styles/comics.module.css';
 
 const obtenerFavoritos = () => {
