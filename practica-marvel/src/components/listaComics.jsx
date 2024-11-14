@@ -29,7 +29,7 @@ const ListaComics = () => {
     const [comics, setComics] = useState([]);
     const [detallesComic, setDetallesComic] = useState(null);
     const [isVentanaComicOpen, setIsVentanaComicOpen] = useState(false);
-    const [ventanaFavoritosAbierta, setVentanaFavoritosAbierta] = useState(false); // Añadida la variable de estado para la ventana de favoritos
+    const [ventanaFavoritosAbierta, setVentanaFavoritosAbierta] = useState(false); 
     const [error, setError] = useState('');
     const [favoritos, setFavoritos] = useState(obtenerFavoritos());
 
