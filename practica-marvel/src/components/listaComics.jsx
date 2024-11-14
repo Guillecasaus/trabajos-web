@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { obtenerComics, obtenerDetallesComics } from './APIMarvel';
-import VentanaComic from './VentanaComic'; 
+import VentanaComic from './VentanaComic';
 import styles from '../Styles/comics.module.css';
 
 const obtenerFavoritos = () => {
@@ -28,7 +28,8 @@ const eliminarDeFavoritos = (comicId) => {
 const ListaComics = () => {
     const [comics, setComics] = useState([]);
     const [detallesComic, setDetallesComic] = useState(null);
-    const [isVentanaComicOpen, setIsVentanaComicOpen] = useState(false); 
+    const [isVentanaComicOpen, setIsVentanaComicOpen] = useState(false);
+    const [ventanaFavoritosAbierta, setVentanaFavoritosAbierta] = useState(false); // Añadida la variable de estado para la ventana de favoritos
     const [error, setError] = useState('');
     const [favoritos, setFavoritos] = useState(obtenerFavoritos());
 
@@ -50,7 +51,7 @@ const ListaComics = () => {
             const detalles = await obtenerDetallesComics(comicId);
             if (detalles) {
                 setDetallesComic(detalles);
-                setIsVentanaComicOpen(true); 
+                setIsVentanaComicOpen(true);
             } else {
                 setError('Error al obtener los detalles del cómic');
             }
@@ -72,6 +73,14 @@ const ListaComics = () => {
     const manejarEliminarFavorito = (comicId) => {
         eliminarDeFavoritos(comicId);
         setFavoritos(obtenerFavoritos());
+    };
+
+    const abrirVentanaFavoritos = () => {
+        setVentanaFavoritosAbierta(true);
+    };
+
+    const cerrarVentanaFavoritos = () => {
+        setVentanaFavoritosAbierta(false);
     };
 
     return (
@@ -102,18 +111,27 @@ const ListaComics = () => {
                 <VentanaComic detallesComic={detallesComic} cerrarVentana={cerrarVentanaComic} />
             )}
 
-            <div className={styles.favoritos}>
-                <h2>Favoritos</h2>
-                {favoritos.length > 0 ? (
-                    favoritos.map((fav) => (
-                        <div key={fav.id}>
-                            <h4>{fav.title}</h4>
-                            <button onClick={() => manejarEliminarFavorito(fav.id)} className={styles.button}>Eliminar de Favoritos</button>
-                        </div>
-                    ))
-                ) : (
-                    <p>No hay cómics en favoritos.</p>
-                )}
+            {ventanaFavoritosAbierta && (
+                <div className={styles.ventanaFavoritos}>
+                    <div className={styles.ventanaFavoritosContenido}>
+                        <button onClick={cerrarVentanaFavoritos} className={styles.closeButton}>Cerrar</button>
+                        <h2>Favoritos</h2>
+                        {favoritos.length > 0 ? (
+                            favoritos.map((fav) => (
+                                <div key={fav.id}>
+                                    <h4>{fav.title}</h4>
+                                    <button onClick={() => manejarEliminarFavorito(fav.id)} className={styles.button}>Eliminar de Favoritos</button>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No hay cómics en favoritos.</p>
+                        )}
+                    </div>
+                </div>
+            )}
+            
+            <div className={styles.botonFavoritos} onClick={abrirVentanaFavoritos}>
+                Favoritos ({favoritos.length})
             </div>
         </div>
     );

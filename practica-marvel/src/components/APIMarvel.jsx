@@ -32,7 +32,7 @@ export const obtenerDetallesComics = async (comicId) => {
                 comic.personajes = personajesData.data.results.map((personaje) => {
                     return {
                         name: personaje.name,
-                        thumbnail: personaje.thumbnail ? personaje.thumbnail : null // Asegura que `thumbnail` existe
+                        thumbnail: personaje.thumbnail ? personaje.thumbnail : null 
                     };
                 });
             }
