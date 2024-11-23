@@ -8,7 +8,7 @@ export default function HomePage() {
       </h1>
       <p className="text-2xl mt-3">Bienvenido a la plataforma de gestión de clientes</p>
       <Link href="/registro" className="bg-blue-500 text-white px-6 py-3 rounded-md mt-4 hover:bg-blue-600">
-        Ir a Registro
+        Registrarse
       </Link>
     </div>
   );
