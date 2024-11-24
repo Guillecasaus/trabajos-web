@@ -42,8 +42,8 @@ export default function Register() {
           // Guardar el token JWT en localStorage
           localStorage.setItem("jwt", data.token);
 
-          // Redirigir al inicio después del registro
-          router.push("/inicio");
+          // Redirigir a la validación después del registro
+          router.push("/validacion");
         } else {
           setMensaje("Error al registrar el usuario");
         }
