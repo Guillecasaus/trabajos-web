@@ -24,7 +24,7 @@ export default function Login() {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("jwt", data.token); 
-        router.push("/inicio"); 
+        router.push("/dashboard"); 
       } else {
         setMensaje("Error al iniciar sesión. Verifica tus credenciales.");
       }
