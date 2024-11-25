@@ -28,7 +28,7 @@ export default function Register() {
     }),
     onSubmit: async (values) => {
       try {
-        const response = await fetch(
+        const res = await fetch(
           "https://bildy-rpmaya.koyeb.app/api/user/register",
           {
             method: "POST",
@@ -37,8 +37,8 @@ export default function Register() {
           }
         );
 
-        if (response.ok) {
-          const data = await response.json();
+        if (res.ok) {
+          const data = await res.json();
           // Guardar el token JWT en localStorage
           localStorage.setItem("jwt", data.token);
 

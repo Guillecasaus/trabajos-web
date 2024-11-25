@@ -14,11 +14,12 @@ export default function ValidarCodigo() {
 
     if (!token) {
       setMensaje("No se encontró un token de sesión. Regístrate o inicia sesión primero.");
+      router.push("/");
       return;
     }
 
     try {
-      const response = await fetch("https://bildy-rpmaya.koyeb.app/api/user/validation", {
+      const res = await fetch("https://bildy-rpmaya.koyeb.app/api/user/validation", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -27,9 +28,9 @@ export default function ValidarCodigo() {
         body: JSON.stringify({ code: codigo }), // Código de validación introducido por el usuario.
       });
 
-      if (response.ok) {
+      if (res.ok) {
         setMensaje("¡Correo validado con éxito!");
-        router.push("/inicio"); // Redirigir al dashboard o home.
+        router.push("/dashboard"); 
       } else {
         setMensaje("Error al validar el código. Verifica el código e inténtalo de nuevo.");
       }

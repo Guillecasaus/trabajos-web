@@ -23,8 +23,8 @@ export default function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("jwt", data.token); // Guardar el token JWT en localStorage
-        router.push("/inicio"); // Redirigir al home o dashboard
+        localStorage.setItem("jwt", data.token); 
+        router.push("/inicio"); 
       } else {
         setMensaje("Error al iniciar sesión. Verifica tus credenciales.");
       }
