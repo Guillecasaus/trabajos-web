@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../Components/Navbar";
+import Encabezado from "../Components/Encabezado";
 
 export default function Home() {
   const router = useRouter();
@@ -17,9 +18,11 @@ export default function Home() {
 
   return (
     <>
+      <Encabezado/>
       <div className="dashboard">
         <Navbar />
       </div>
+      {/*
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
         <h1 className="text-6xl font-bold">
           <span className="text-blue-500">Bildy</span> 
@@ -30,7 +33,7 @@ export default function Home() {
         >
           Ir a Clientes
         </a>
-      </div>
+      </div>*/}
     </>
   );
 }

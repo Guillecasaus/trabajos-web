@@ -88,7 +88,7 @@ const FormularioCliente = ({ clienteId }) => {
       <form onSubmit={formik.handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="nombre" className="block text-sm font-medium mb-1">
-            Nombre
+            Nombre del Cliente o Empresa*
           </label>
           <input
             id="nombre"

@@ -1,0 +1,53 @@
+/* Archivo Styles/crearCliente.module.css */
+
+.contenedorPrincipal {
+    display: flex;
+    flex-direction: row;
+    gap: 20px; /* Espaciado entre columnas */
+    padding: 20px;
+    height: 0vh; /* Altura completa de la pantalla */
+    box-sizing: border-box;
+  }
+  
+  .columnaIzquierda {
+    flex: 2; /* La columna izquierda ocupa más espacio */
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .columnaDerecha {
+    flex: 1; /* La columna derecha ocupa menos espacio */
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .botonCrearCliente {
+    margin-top: 20px;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .botonCrearCliente:hover {
+    background-color: #0056b3;
+  }
+  
+  .imagenPlaceholder {
+    max-width: 200px;
+    margin: 0 auto;
+  }
+  
+  .tituloFormulario {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
