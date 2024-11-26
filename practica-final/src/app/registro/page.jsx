@@ -6,8 +6,8 @@ import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 
 export default function Register() {
-  const [mensaje, setMensaje] = useState(""); // Estado para manejar mensajes de error/éxito
-  const router = useRouter(); // Para manejar la redirección después del registro
+  const [mensaje, setMensaje] = useState("");
+  const router = useRouter();
 
   const formik = useFormik({
     initialValues: {
@@ -28,27 +28,21 @@ export default function Register() {
     }),
     onSubmit: async (values) => {
       try {
-        const res = await fetch(
-          "https://bildy-rpmaya.koyeb.app/api/user/register",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(values),
-          }
-        );
+        const res = await fetch("/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        });        
 
         if (res.ok) {
-          const data = await res.json();
-          // Guardar el token JWT en localStorage
-          localStorage.setItem("jwt", data.token);
-
-          // Redirigir a la validación después del registro
-          router.push("/validacion");
+          setMensaje("Registro exitoso");
+          router.push("/validacion"); // Redirigir a la validación
         } else {
-          setMensaje("Error al registrar el usuario");
+          const errorData = await res.json();
+          setMensaje(errorData.error || "Error al registrar el usuario");
         }
       } catch (error) {
-        setMensaje("Hubo un error al procesar tu solicitud");
+        setMensaje("Hubo un error al procesar tu solicitud.");
       }
     },
   });
@@ -56,9 +50,7 @@ export default function Register() {
   return (
     <div className="max-w-lg mx-auto p-6 bg-gray-100 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4">Crea tu cuenta</h2>
-      {mensaje && (
-        <p className="mb-4 text-center text-red-500">{mensaje}</p>
-      )}
+      {mensaje && <p className="mb-4 text-center text-red-500">{mensaje}</p>}
       <form onSubmit={formik.handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="firstName" className="block text-sm font-medium mb-1">
