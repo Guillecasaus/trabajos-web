@@ -1,57 +1,47 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 
-const ObtenerClientes = async () => {
-  const res = await fetch("https://bildy-rpmaya.koyeb.app/api/client");
-  const data = await res.json();
-  return data;
-};
-
-export default function ListaClientes() {
+const ListaClientes = ({ onSelectCliente }) => {
   const [clientes, setClientes] = useState([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    async function cargarClientes() {
+    const fetchClientes = async () => {
       try {
-        const data = await ObtenerClientes();
-        setClientes(data);
-      } catch (err) {
-        setError("Error al cargar los clientes");
+        const res = await fetch("/api/client");
+        if (res.ok) {
+          const data = await res.json();
+          setClientes(data);
+        } else {
+          const errorData = await res.json();
+          setError(errorData.error || "Error al obtener los clientes");
+        }
+      } catch (error) {
+        setError("Error al procesar la solicitud");
       }
-    }
-    cargarClientes();
+    };
+
+    fetchClientes();
   }, []);
 
   return (
-    <div>
-      {error && <p className="text-red-500">{error}</p>}
-      <ul className="space-y-4">
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">Todos los clientes</h2>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      <ul>
         {clientes.map((cliente) => (
           <li
             key={cliente.id}
-            className="bg-gray-100 p-4 rounded-lg shadow-md flex justify-between items-center"
+            className="cursor-pointer p-2 border-b hover:bg-gray-100"
+            onClick={() => onSelectCliente(cliente.id)}
           >
-            <span>
-              {cliente.name} ({cliente.email})
-            </span>
-            <Link
-              href={`/clients/${cliente.id}`}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-            >
-              Editar
-            </Link>
+            {cliente.nombre}
           </li>
         ))}
       </ul>
-      <Link
-        href="/clients/new"
-        className="mt-4 inline-block bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-      >
-        Crear Cliente
-      </Link>
     </div>
   );
-}
+};
+
+export default ListaClientes;

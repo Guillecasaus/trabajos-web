@@ -7,7 +7,7 @@ import Encabezado from "../Components/Encabezado";
 export default function CrearCliente() {
   return (
     <>
-      <Encabezado />
+      <Encabezado tituloPagina="Crear Cliente" />
       <div className="dashboard">
         <Navbar />
       </div>

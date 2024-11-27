@@ -4,57 +4,90 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-const enviarClienteAPI = async (values, setMensaje) => {
+// Importar el componente ModalConfirmacion
+const ModalConfirmacion = ({ mensaje, onConfirm }) => {
+  return (
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+        <div className="text-center">
+          <div className="text-4xl text-blue-500 mb-4">✔️</div>
+          <h2 className="text-lg font-semibold mb-2">{mensaje}</h2>
+          <p className="text-gray-500 mb-6">
+            ¿Quieres crear otro cliente o finalizar?
+          </p>
+          <div className="flex justify-center space-x-4">
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              onClick={() => onConfirm(true)}
+            >
+              Crear otro
+            </button>
+            <button
+              className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+              onClick={() => onConfirm(false)}
+            >
+              Finalizar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const enviarClienteAPI = async (values, setMensaje, setShowModal) => {
   try {
-    const res = await fetch(
-      "https://bildy-rpmaya.koyeb.app/api/client",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      }
-    );
+    // Llamar a la API interna de Next.js
+    const res = await fetch("/api/client", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
 
     if (res.ok) {
       setMensaje("Cliente creado con éxito");
+      setShowModal(true); // Mostrar el modal tras éxito
     } else {
-      throw new Error("Error al crear el cliente");
+      const errorData = await res.json();
+      throw new Error(errorData.error || "Error al crear el cliente");
     }
   } catch (error) {
+    console.error("Error al procesar la solicitud:", error.message);
     setMensaje("Hubo un error al procesar tu solicitud");
   }
 };
 
 const FormularioCliente = ({ clienteId }) => {
   const [mensaje, setMensaje] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const formik = useFormik({
     initialValues: {
       nombre: "",
-      email: "",
+      domicilioFiscal: "",
+      cif: "",
     },
     validationSchema: Yup.object({
       nombre: Yup.string().required("El nombre es obligatorio"),
-      email: Yup.string()
-        .email("Introduce un email válido")
-        .required("El email es obligatorio"),
+      domicilioFiscal: Yup.string().required(
+        "El domicilio fiscal es obligatorio"
+      ),
+      cif: Yup.string()
+        .matches(/^[A-Z0-9]+$/, "El CIF debe ser válido")
+        .required("El CIF es obligatorio"),
     }),
     onSubmit: async (values) => {
       if (clienteId) {
-
         try {
-          const response = await fetch(
-            `https://bildy-rpmaya.koyeb.app/api/client/${clienteId}`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(values),
-            }
-          );
+          const response = await fetch(`/api/client/${clienteId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          });
 
           if (response.ok) {
             setMensaje("Cliente actualizado con éxito");
@@ -62,10 +95,11 @@ const FormularioCliente = ({ clienteId }) => {
             throw new Error("Error al actualizar el cliente");
           }
         } catch (error) {
+          console.error("Error al procesar la solicitud:", error.message);
           setMensaje("Hubo un error al procesar tu solicitud");
         }
       } else {
-        await enviarClienteAPI(values, setMensaje);
+        await enviarClienteAPI(values, setMensaje, setShowModal);
         formik.resetForm();
       }
     },
@@ -105,30 +139,77 @@ const FormularioCliente = ({ clienteId }) => {
         </div>
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium mb-1">
-            Email
+          <label
+            htmlFor="domicilioFiscal"
+            className="block text-sm font-medium mb-1"
+          >
+            Domicilio Fiscal*
           </label>
           <input
-            id="email"
-            type="email"
-            name="email"
-            value={formik.values.email}
+            id="domicilioFiscal"
+            type="text"
+            name="domicilioFiscal"
+            value={formik.values.domicilioFiscal}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className="w-full p-2 border rounded-md"
           />
-          {formik.touched.email && formik.errors.email && (
-            <p className="text-red-500 text-sm">{formik.errors.email}</p>
+          {formik.touched.domicilioFiscal &&
+            formik.errors.domicilioFiscal && (
+              <p className="text-red-500 text-sm">
+                {formik.errors.domicilioFiscal}
+              </p>
+            )}
+        </div>
+
+        <div>
+          <label htmlFor="cif" className="block text-sm font-medium mb-1">
+            CIF (si lo sabes)
+          </label>
+          <input
+            id="cif"
+            type="text"
+            name="cif"
+            value={formik.values.cif}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full p-2 border rounded-md"
+          />
+          {formik.touched.cif && formik.errors.cif && (
+            <p className="text-red-500 text-sm">{formik.errors.cif}</p>
           )}
         </div>
 
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-        >
-          {clienteId ? "Actualizar Cliente" : "Crear Cliente"}
-        </button>
+        <div className="flex justify-end space-x-2">
+          <button
+            type="button"
+            className="bg-gray-300 text-black px-4 py-2 rounded-md hover:bg-gray-400"
+            onClick={() => formik.resetForm()}
+          >
+            Descartar
+          </button>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          >
+            {clienteId ? "Actualizar Cliente" : "Guardar"}
+          </button>
+        </div>
       </form>
+
+      {showModal && (
+        <ModalConfirmacion
+          mensaje="Cliente creado y guardado con éxito"
+          onConfirm={(crearOtro) => {
+            setShowModal(false);
+            if (crearOtro) {
+              formik.resetForm(); // Limpiar el formulario
+            } else {
+              window.location.href = "/Clientes"; // Redirigir a otra página
+            }
+          }}
+        />
+      )}
     </div>
   );
 };
