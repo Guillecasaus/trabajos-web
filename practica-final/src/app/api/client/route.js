@@ -3,9 +3,9 @@ import { cookies } from "next/headers";
 
 const API_BASE_URL = "https://bildy-rpmaya.koyeb.app/api";
 
-// Función para obtener el token JWT de manera segura
+
 function getJWT() {
-  const cookieStore = cookies(); // Accedemos directamente al objeto cookies
+  const cookieStore = cookies(); 
   const jwtToken = cookieStore.get("jwt")?.value;
 
   if (!jwtToken) {
@@ -15,10 +15,9 @@ function getJWT() {
   return jwtToken;
 }
 
-// Obtener todos los clientes
 export async function GET() {
   try {
-    const jwtToken = getJWT(); // Obtenemos el JWT de manera segura
+    const jwtToken = getJWT(); 
 
     const response = await fetch(`${API_BASE_URL}/client`, {
       method: "GET",
@@ -46,7 +45,6 @@ export async function GET() {
   }
 }
 
-// Crear un nuevo cliente
 export async function POST(req) {
   try {
     const { nombre, domicilioFiscal, cif } = await req.json();
@@ -58,7 +56,7 @@ export async function POST(req) {
       );
     }
 
-    const jwtToken = getJWT(); // Obtenemos el JWT de manera segura
+    const jwtToken = getJWT(); 
 
     const response = await fetch(`${API_BASE_URL}/client`, {
       method: "POST",

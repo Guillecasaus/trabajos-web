@@ -45,19 +45,14 @@ const ProjectsPage = () => {
 
   return (
     <><Encabezado tituloPagina="Proyectos" /><div className="flex h-screen bg-gray-100">
-          {/* Navbar */}
           <Navbar />
 
 
-          {/* Contenedor principal con margen izquierdo */}
           <div className="flex-grow flex flex-col ml-64">
 
 
-              {/* Contenido principal */}
               <div className="flex flex-grow p-6 space-x-6">
-                  {/* Columna principal izquierda */}
                   <div className="w-2/3 space-y-6">
-                      {/* Formulario para agregar o editar proyectos */}
                       <div className="bg-white shadow-md rounded-lg p-6">
                           <h2 className="text-2xl font-bold mb-4">Añadir o Editar Proyecto</h2>
                           <form>
@@ -86,7 +81,6 @@ const ProjectsPage = () => {
                           </form>
                       </div>
 
-                      {/* Tabla de Albaranes */}
                       <div className="bg-white shadow-md rounded-lg p-6">
                           <h2 className="text-2xl font-bold mb-4">Albaranes</h2>
                           {error && <p className="text-red-500">{error}</p>}
@@ -132,9 +126,9 @@ const ProjectsPage = () => {
                       </div>
                   </div>
 
-                  {/* Columna derecha */}
+
                   <div className="w-1/3 space-y-6">
-                      {/* Detalles del Cliente */}
+
                       {selectedProject && (
                           <div className="bg-white shadow-md rounded-lg p-6">
                               <h2 className="text-2xl font-bold mb-4">{selectedProject.clientName}</h2>
@@ -148,8 +142,6 @@ const ProjectsPage = () => {
                               </div>
                           </div>
                       )}
-
-                      {/* Notas */}
                       <div className="bg-white shadow-md rounded-lg p-6">
                           <h3 className="text-lg font-medium mb-2">Notas</h3>
                           <textarea

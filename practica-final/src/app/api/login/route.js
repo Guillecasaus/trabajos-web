@@ -5,7 +5,6 @@ export async function POST(req) {
   try {
     const { email, password } = await req.json();
 
-    // Llamar a la API externa
     const response = await fetch("https://bildy-rpmaya.koyeb.app/api/user/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -25,7 +24,6 @@ export async function POST(req) {
 
       return NextResponse.json({ message: "Inicio de sesión exitoso" });
     } else {
-      // Verificar si la respuesta es JSON o texto plano
       const contentType = response.headers.get("content-type");
 
       if (contentType && contentType.includes("application/json")) {

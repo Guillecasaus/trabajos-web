@@ -4,12 +4,11 @@ import { useState } from "react";
 import FormularioCliente from "../Components/FormularioCliente";
 import Navbar from "../Components/Navbar";
 import Encabezado from "../Components/Encabezado";
-import styles from "../Styles/crearCliente.module.css"; // Importar los estilos
+import styles from "../Styles/crearCliente.module.css"; 
 
 export default function CrearCliente() {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
 
-  // Función para manejar el cambio de vista
   const manejarCambioVista = () => {
     setMostrarFormulario(true);
   };
@@ -20,10 +19,8 @@ export default function CrearCliente() {
       <div className="flex">
         <Navbar />
         <div className={styles.contenedorPrincipal}>
-          {/* Columna izquierda */}
           <div className={styles.columnaIzquierda}>
             {!mostrarFormulario ? (
-              // Vista inicial con imagen y botón
               <div className="text-center flex flex-col items-center justify-center h-full">
                 <img
                   src="/crear-cliente-placeholder.png"
@@ -42,12 +39,10 @@ export default function CrearCliente() {
                 </button>
               </div>
             ) : (
-              // Renderizar el formulario del cliente
               <FormularioCliente />
             )}
           </div>
 
-          {/* Columna derecha */}
           <div className={styles.columnaDerecha}>
             <div className="mb-6">
               <h3 className="text-lg font-bold">Logo Cliente</h3>

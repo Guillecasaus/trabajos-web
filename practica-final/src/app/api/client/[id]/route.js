@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 
 const API_BASE_URL = "https://bildy-rpmaya.koyeb.app/api";
 
-// Función para obtener el token JWT de manera segura
 function getJWT() {
   const cookieStore = cookies();
   const jwtToken = cookieStore.get("jwt")?.value;
@@ -15,10 +14,10 @@ function getJWT() {
   return jwtToken;
 }
 
-// Obtener cliente por ID
+
 export async function GET(req, { params }) {
   try {
-    const jwtToken = getJWT(); // Obtenemos el JWT de manera segura
+    const jwtToken = getJWT(); 
 
     const { id } = params;
 

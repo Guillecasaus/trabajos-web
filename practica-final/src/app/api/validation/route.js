@@ -1,10 +1,9 @@
-// pages/api/validation.js
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function PUT(req) {
   const cookieStore = cookies();
-  const jwt = cookieStore.get("jwt"); // Leer la cookie JWT
+  const jwt = cookieStore.get("jwt"); 
 
   if (!jwt) {
     return NextResponse.json({ error: "No estás autenticado" }, { status: 401 });
@@ -17,7 +16,7 @@ export async function PUT(req) {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt.value}`, // Pasar el token como Bearer
+        Authorization: `Bearer ${jwt.value}`, 
       },
       body: JSON.stringify({ code }),
     });

@@ -18,7 +18,7 @@ export default function CrearCliente() {
         const res = await fetch("/api/client");
         if (res.ok) {
           const data = await res.json();
-          setHayClientes(data.length > 0); // Si hay clientes, habilitar el botón
+          setHayClientes(data.length > 0); 
         } else {
           const errorData = await res.json();
           setError(errorData.error || "Error al verificar los clientes.");
@@ -46,12 +46,10 @@ export default function CrearCliente() {
         <Navbar />
       </div>
       <div className="flex flex-row">
-        {/* Columna izquierda */}
         <div className="w-2/3 p-8">
           <FormularioCliente />
         </div>
 
-        {/* Columna derecha */}
         <div className="w-1/3 p-8 bg-gray-100">
           <div className="mb-6">
             <h3 className="text-lg font-bold">Logo Cliente</h3>
@@ -73,7 +71,6 @@ export default function CrearCliente() {
               Los tags se usan para clasificar a los clientes.
             </p>
           </div>
-          {/* Botón para redirigir a Lista de Clientes */}
           <div className="mt-6">
             <button
               onClick={redirigirListaClientes}
