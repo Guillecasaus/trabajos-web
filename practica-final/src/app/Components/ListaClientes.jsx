@@ -30,9 +30,9 @@ const ListaClientes = ({ onSelectCliente }) => {
       <h2 className="text-xl font-bold mb-4">Todos los clientes</h2>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <ul>
-        {clientes.map((cliente) => (
+        {clientes.map((cliente, index) => (
           <li
-            key={cliente.id}
+            key={cliente.id || `cliente-${index}`}
             className="cursor-pointer p-2 border-b hover:bg-gray-100"
             onClick={() => onSelectCliente(cliente.id)}
           >

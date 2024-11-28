@@ -3,8 +3,7 @@ import { cookies } from "next/headers";
 
 const API_BASE_URL = "https://bildy-rpmaya.koyeb.app/api";
 
-// Función para obtener el token JWT de manera segura
-function getJWT() {
+async function getJWT() {
   const cookieStore = cookies();
   const jwtToken = cookieStore.get("jwt")?.value;
 
@@ -15,14 +14,11 @@ function getJWT() {
   return jwtToken;
 }
 
-// Obtener cliente por ID
-export async function GET(req, { params }) {
+export async function GET(req) {
   try {
-    const jwtToken = getJWT(); // Obtenemos el JWT de manera segura
+    const jwtToken = await getJWT();
 
-    const { id } = params;
-
-    const response = await fetch(`${API_BASE_URL}/client/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/project`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${jwtToken}`,
@@ -35,14 +31,14 @@ export async function GET(req, { params }) {
     } else {
       const errorData = await response.json();
       return NextResponse.json(
-        { error: errorData.message || "Error al obtener el cliente" },
+        { error: errorData.message || "Error al obtener los proyectos" },
         { status: response.status }
       );
     }
   } catch (error) {
     console.error("Error interno del servidor:", error.message);
     return NextResponse.json(
-      { error: error.message || "Error interno del servidor" },
+      { error: "Error interno del servidor" },
       { status: 500 }
     );
   }

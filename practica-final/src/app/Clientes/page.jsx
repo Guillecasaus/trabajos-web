@@ -1,10 +1,44 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import FormularioCliente from "../Components/FormularioCliente";
 import Navbar from "../Components/Navbar";
 import Encabezado from "../Components/Encabezado";
+import { useRouter } from "next/navigation";
 
 export default function CrearCliente() {
+  const [hayClientes, setHayClientes] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  // Verificar si hay clientes registrados
+  useEffect(() => {
+    const fetchClientes = async () => {
+      try {
+        const res = await fetch("/api/client");
+        if (res.ok) {
+          const data = await res.json();
+          setHayClientes(data.length > 0); // Si hay clientes, habilitar el botón
+        } else {
+          const errorData = await res.json();
+          setError(errorData.error || "Error al verificar los clientes.");
+        }
+      } catch (error) {
+        setError("Error al procesar la solicitud.");
+      }
+    };
+
+    fetchClientes();
+  }, []);
+
+  const redirigirListaClientes = () => {
+    if (hayClientes) {
+      router.push("/lista-clientes");
+    } else {
+      alert("No hay clientes registrados.");
+    }
+  };
+
   return (
     <>
       <Encabezado tituloPagina="Crear Cliente" />
@@ -33,11 +67,24 @@ export default function CrearCliente() {
               placeholder="Añade notas sobre tu cliente"
             ></textarea>
           </div>
-          <div>
+          <div className="mb-6">
             <h3 className="text-lg font-bold">Tags</h3>
             <p className="text-sm text-gray-600">
               Los tags se usan para clasificar a los clientes.
             </p>
+          </div>
+          {/* Botón para redirigir a Lista de Clientes */}
+          <div className="mt-6">
+            <button
+              onClick={redirigirListaClientes}
+              className={`bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 ${
+                !hayClientes ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={!hayClientes}
+            >
+              Ver Lista de Clientes
+            </button>
+            {error && <p className="text-red-500 mt-2">{error}</p>}
           </div>
         </div>
       </div>

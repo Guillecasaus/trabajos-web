@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const DetalleCliente = ({ clienteId }) => {
+const DetallesCliente = ({ clienteId }) => {
   const [cliente, setCliente] = useState(null);
   const [error, setError] = useState("");
 
@@ -40,9 +40,8 @@ const DetalleCliente = ({ clienteId }) => {
       <h2 className="text-xl font-bold">{cliente.nombre}</h2>
       <p>Domicilio Fiscal: {cliente.domicilioFiscal}</p>
       <p>CIF: {cliente.cif}</p>
-      {/* Añade más detalles según sea necesario */}
     </div>
   );
 };
 
-export default DetalleCliente;
+export default DetallesCliente;
