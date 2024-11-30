@@ -7,13 +7,12 @@ const Encabezado = ({ tituloPagina }) => {
   const [usuario, setUsuario] = useState({ nombre: " ", foto: null});
 
   useEffect(() => {
-    // Obtener los datos del usuario desde localStorage
     const usuarioGuardado = JSON.parse(localStorage.getItem("usuario"));
 
     if (usuarioGuardado) {
       setUsuario({
         nombre: usuarioGuardado.nombre,
-        foto: usuarioGuardado.foto || "/user-avatar.png", // Usa un avatar predeterminado si no hay foto
+        foto: usuarioGuardado.foto || "/user-avatar.png", 
       });
     }
   }, []);

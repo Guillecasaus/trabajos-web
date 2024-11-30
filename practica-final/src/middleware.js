@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export function middleware(request) {
   const jwt = request.cookies.get('jwt')?.value; // Obtener el token JWT de las cookies
-  const protectedRoutes = ['/dashboard', '/clientes', '/ajustes']; // Rutas protegidas
+  const protectedRoutes = ['/dashboard', '/Clientes', '/ajustes']; // Rutas protegidas
   const publicRoutes = ['/login', '/registro']; // Rutas públicas para usuarios no logueados
 
   const currentPath = request.nextUrl.pathname;

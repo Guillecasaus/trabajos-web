@@ -36,7 +36,7 @@ export default function Register() {
 
         if (res.ok) {
           setMensaje("Registro exitoso");
-          router.push("/validacion"); // Redirigir a la validación
+          router.push("/validacion"); 
         } else {
           const errorData = await res.json();
           setMensaje(errorData.error || "Error al registrar el usuario");

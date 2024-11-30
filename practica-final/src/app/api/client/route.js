@@ -3,21 +3,19 @@ import { cookies } from "next/headers";
 
 const API_BASE_URL = "https://bildy-rpmaya.koyeb.app/api";
 
-
 function getJWT() {
-  const cookieStore = cookies(); 
-  const jwtToken = cookieStore.get("jwt")?.value;
+  const cookieStore = cookies();
+  const jwtToken = cookieStore.get("jwt");
 
-  if (!jwtToken) {
+  if (!jwtToken?.value) {
     throw new Error("No estás autenticado. Por favor, inicia sesión.");
   }
 
-  return jwtToken;
+  return jwtToken.value;
 }
-
 export async function GET() {
   try {
-    const jwtToken = getJWT(); 
+    const jwtToken = await getJWT(); // Asegurarte de usar await aquí.
 
     const response = await fetch(`${API_BASE_URL}/client`, {
       method: "GET",
@@ -45,6 +43,7 @@ export async function GET() {
   }
 }
 
+
 export async function POST(req) {
   try {
     const { nombre, domicilioFiscal, cif } = await req.json();
@@ -56,7 +55,7 @@ export async function POST(req) {
       );
     }
 
-    const jwtToken = getJWT(); 
+    const jwtToken = await getJWT(); // Asegurarte de usar await aquí.
 
     const response = await fetch(`${API_BASE_URL}/client`, {
       method: "POST",

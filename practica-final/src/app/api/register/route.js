@@ -5,7 +5,6 @@ export async function POST(req) {
   try {
     const { firstName, lastName, email, password } = await req.json();
 
-    // Llamar a la API externa
     const response = await fetch("https://bildy-rpmaya.koyeb.app/api/user/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -15,7 +14,6 @@ export async function POST(req) {
     if (response.ok) {
       const data = await response.json();
 
-      // Establecer la cookie JWT del lado del servidor
       cookies().set("jwt", data.token, {
         httpOnly: true,
         secure: true,
@@ -25,7 +23,6 @@ export async function POST(req) {
 
       return NextResponse.json({ message: "Registro exitoso" });
     } else {
-      // Verificar si la respuesta es JSON o texto plano
       const contentType = response.headers.get("content-type");
 
       if (contentType && contentType.includes("application/json")) {

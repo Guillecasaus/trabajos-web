@@ -15,13 +15,11 @@ function getJWT() {
 }
 
 
-export async function GET(req, { params }) {
+export async function GET() {
   try {
-    const jwtToken = getJWT(); 
+    const jwtToken = getJWT(); // Recuperar el token JWT
 
-    const { id } = params;
-
-    const response = await fetch(`${API_BASE_URL}/client/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/client`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${jwtToken}`,
@@ -30,11 +28,20 @@ export async function GET(req, { params }) {
 
     if (response.ok) {
       const data = await response.json();
-      return NextResponse.json(data);
+
+      // Asegúrate de devolver un array con los clientes
+      if (Array.isArray(data)) {
+        return NextResponse.json(data);
+      } else {
+        return NextResponse.json(
+          { error: "La respuesta del backend no es un array de clientes." },
+          { status: 500 }
+        );
+      }
     } else {
       const errorData = await response.json();
       return NextResponse.json(
-        { error: errorData.message || "Error al obtener el cliente" },
+        { error: errorData.message || "Error al obtener los clientes" },
         { status: response.status }
       );
     }
@@ -46,3 +53,4 @@ export async function GET(req, { params }) {
     );
   }
 }
+

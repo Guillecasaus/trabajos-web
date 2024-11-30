@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 const DetallesCliente = ({ clienteId }) => {
-  const [cliente, setCliente] = useState(null);
+  const [clienteData, setClienteData] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -12,7 +12,8 @@ const DetallesCliente = ({ clienteId }) => {
         const res = await fetch(`/api/client/${clienteId}`);
         if (res.ok) {
           const data = await res.json();
-          setCliente(data);
+          console.log("Cliente recibido:", data); // Depuración
+          setClienteData(data); // Asignar datos recibidos directamente
         } else {
           const errorData = await res.json();
           setError(errorData.error || "Error al obtener el cliente");
@@ -31,15 +32,20 @@ const DetallesCliente = ({ clienteId }) => {
     return <p className="text-red-500">{error}</p>;
   }
 
-  if (!cliente) {
+  if (!clienteData) {
     return <p>Cargando cliente...</p>;
   }
 
+  // Accediendo directamente a `data` (clienteData)
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold">{cliente.nombre}</h2>
-      <p>Domicilio Fiscal: {cliente.domicilioFiscal}</p>
-      <p>CIF: {cliente.cif}</p>
+      <h2 className="text-xl font-bold">
+        {clienteData.name || "Sin nombre"}
+      </h2>
+      <p>
+        Domicilio Fiscal: {clienteData.address?.domicilioFiscal || "No especificado"}
+      </p>
+      <p>CIF: {clienteData.cif || "No especificado"}</p>
     </div>
   );
 };
