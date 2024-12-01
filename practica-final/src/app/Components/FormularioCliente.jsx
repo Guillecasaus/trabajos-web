@@ -1,10 +1,8 @@
-"use client";
-
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-// Importar el componente ModalConfirmacion
+// Componente de confirmación
 const ModalConfirmacion = ({ mensaje, onConfirm }) => {
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
@@ -37,7 +35,6 @@ const ModalConfirmacion = ({ mensaje, onConfirm }) => {
 
 const enviarClienteAPI = async (values, setMensaje, setShowModal) => {
   try {
-    // Llamar a la API interna de Next.js
     const res = await fetch("/api/client", {
       method: "POST",
       headers: {
@@ -47,8 +44,9 @@ const enviarClienteAPI = async (values, setMensaje, setShowModal) => {
     });
 
     if (res.ok) {
+      console.log("Datos enviados al servidor:", values);
       setMensaje("Cliente creado con éxito");
-      setShowModal(true); // Mostrar el modal tras éxito
+      setShowModal(true);
     } else {
       const errorData = await res.json();
       throw new Error(errorData.error || "Error al crear el cliente");
@@ -66,42 +64,31 @@ const FormularioCliente = ({ clienteId }) => {
   const formik = useFormik({
     initialValues: {
       nombre: "",
-      domicilioFiscal: "",
       cif: "",
+      address: {
+        street: "",
+        number: "",
+        postal: "",
+        city: "",
+        province: "",
+      },
     },
     validationSchema: Yup.object({
       nombre: Yup.string().required("El nombre es obligatorio"),
-      domicilioFiscal: Yup.string().required(
-        "El domicilio fiscal es obligatorio"
-      ),
       cif: Yup.string()
         .matches(/^[A-Z0-9]+$/, "El CIF debe ser válido")
         .required("El CIF es obligatorio"),
+      address: Yup.object().shape({
+        street: Yup.string().required("La calle es obligatoria"),
+        number: Yup.string().required("El número es obligatorio"),
+        postal: Yup.string().required("El código postal es obligatorio"),
+        city: Yup.string().required("La ciudad es obligatoria"),
+        province: Yup.string().required("La provincia es obligatoria"),
+      }),
     }),
     onSubmit: async (values) => {
-      if (clienteId) {
-        try {
-          const response = await fetch(`/api/client/${clienteId}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-          });
-
-          if (response.ok) {
-            setMensaje("Cliente actualizado con éxito");
-          } else {
-            throw new Error("Error al actualizar el cliente");
-          }
-        } catch (error) {
-          console.error("Error al procesar la solicitud:", error.message);
-          setMensaje("Hubo un error al procesar tu solicitud");
-        }
-      } else {
-        await enviarClienteAPI(values, setMensaje, setShowModal);
-        formik.resetForm();
-      }
+      await enviarClienteAPI(values, setMensaje, setShowModal);
+      formik.resetForm();
     },
   });
 
@@ -139,30 +126,6 @@ const FormularioCliente = ({ clienteId }) => {
         </div>
 
         <div>
-          <label
-            htmlFor="domicilioFiscal"
-            className="block text-sm font-medium mb-1"
-          >
-            Domicilio Fiscal*
-          </label>
-          <input
-            id="domicilioFiscal"
-            type="text"
-            name="domicilioFiscal"
-            value={formik.values.domicilioFiscal}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full p-2 border rounded-md"
-          />
-          {formik.touched.domicilioFiscal &&
-            formik.errors.domicilioFiscal && (
-              <p className="text-red-500 text-sm">
-                {formik.errors.domicilioFiscal}
-              </p>
-            )}
-        </div>
-
-        <div>
           <label htmlFor="cif" className="block text-sm font-medium mb-1">
             CIF (si lo sabes)
           </label>
@@ -177,6 +140,98 @@ const FormularioCliente = ({ clienteId }) => {
           />
           {formik.touched.cif && formik.errors.cif && (
             <p className="text-red-500 text-sm">{formik.errors.cif}</p>
+          )}
+        </div>
+
+        {/* Campos de dirección */}
+        <h3 className="text-lg font-semibold mb-2">Dirección</h3>
+        <div>
+          <label htmlFor="address.street" className="block text-sm font-medium mb-1">
+            Calle*
+          </label>
+          <input
+            id="address.street"
+            type="text"
+            name="address.street"
+            value={formik.values.address.street}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full p-2 border rounded-md"
+          />
+          {formik.touched.address?.street && formik.errors.address?.street && (
+            <p className="text-red-500 text-sm">{formik.errors.address.street}</p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="address.number" className="block text-sm font-medium mb-1">
+            Número*
+          </label>
+          <input
+            id="address.number"
+            type="text"
+            name="address.number"
+            value={formik.values.address.number}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full p-2 border rounded-md"
+          />
+          {formik.touched.address?.number && formik.errors.address?.number && (
+            <p className="text-red-500 text-sm">{formik.errors.address.number}</p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="address.postal" className="block text-sm font-medium mb-1">
+            Código Postal*
+          </label>
+          <input
+            id="address.postal"
+            type="text"
+            name="address.postal"
+            value={formik.values.address.postal}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full p-2 border rounded-md"
+          />
+          {formik.touched.address?.postal && formik.errors.address?.postal && (
+            <p className="text-red-500 text-sm">{formik.errors.address.postal}</p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="address.city" className="block text-sm font-medium mb-1">
+            Ciudad*
+          </label>
+          <input
+            id="address.city"
+            type="text"
+            name="address.city"
+            value={formik.values.address.city}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full p-2 border rounded-md"
+          />
+          {formik.touched.address?.city && formik.errors.address?.city && (
+            <p className="text-red-500 text-sm">{formik.errors.address.city}</p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="address.province" className="block text-sm font-medium mb-1">
+            Provincia*
+          </label>
+          <input
+            id="address.province"
+            type="text"
+            name="address.province"
+            value={formik.values.address.province}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full p-2 border rounded-md"
+          />
+          {formik.touched.address?.province && formik.errors.address?.province && (
+            <p className="text-red-500 text-sm">{formik.errors.address.province}</p>
           )}
         </div>
 
@@ -203,9 +258,9 @@ const FormularioCliente = ({ clienteId }) => {
           onConfirm={(crearOtro) => {
             setShowModal(false);
             if (crearOtro) {
-              formik.resetForm(); // Limpiar el formulario
+              formik.resetForm();
             } else {
-              window.location.href = "/Clientes"; // Redirigir a otra página
+              window.location.href = "/Clientes";
             }
           }}
         />
