@@ -1,63 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 const ProjectForm = ({ onSubmit }) => {
-  const [clientes, setClientes] = useState([]);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const fetchClientes = async () => {
-      try {
-        const res = await fetch("/api/client");
-        if (res.ok) {
-          const data = await res.json();
-          setClientes(data); // Guardar la lista de clientes
-        } else {
-          setError("Error al obtener la lista de clientes");
-        }
-      } catch (error) {
-        setError("Error al procesar la solicitud");
-      }
-    };
-
-    fetchClientes();
-  }, []);
-
   const initialValues = {
     nombreProyecto: "",
-    projectCode: "",
-    email: "",
-    address: {
-      street: "",
-      number: "",
-      postal: "",
-      city: "",
-      province: "",
-    },
-    code: "",
-    ClientId: "",
+    codigoCliente: "",
+    direccionCliente: "",
+    emailCliente: "",
+    codigoInterno: "",
   };
 
   const validationSchema = Yup.object({
     nombreProyecto: Yup.string().required("El nombre del proyecto es obligatorio"),
-    projectCode: Yup.string().required("El código del proyecto es obligatorio"),
-    email: Yup.string().email("Debe ser un email válido").required("El email es obligatorio"),
-    address: Yup.object({
-      street: Yup.string().required("La calle es obligatoria"),
-      number: Yup.string().required("El número es obligatorio"),
-      postal: Yup.string().required("El código postal es obligatorio"),
-      city: Yup.string().required("La ciudad es obligatoria"),
-      province: Yup.string().required("La provincia es obligatoria"),
-    }),
-    code: Yup.string().required("El código interno es obligatorio"),
-    ClientId: Yup.string().required("Debe seleccionar un cliente"),
+    codigoCliente: Yup.string().required("El código del cliente es obligatorio"),
+    direccionCliente: Yup.string().required("La dirección es obligatoria"),
+    emailCliente: Yup.string()
+      .email("Debe ser un email válido")
+      .required("El email es obligatorio"),
+    codigoInterno: Yup.string().required("El código interno es obligatorio"),
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm, setStatus }) => {
-    console.log("Valores enviados:", values);
     try {
       const res = await fetch("/api/project", {
         method: "POST",
@@ -82,7 +47,6 @@ const ProjectForm = ({ onSubmit }) => {
   return (
     <div className="bg-white shadow-md rounded-lg p-6">
       <h2 className="text-2xl font-bold mb-4">Añadir o Editar Proyecto</h2>
-      {error && <p className="text-red-500">{error}</p>}
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -91,7 +55,7 @@ const ProjectForm = ({ onSubmit }) => {
         {({ isSubmitting, status }) => (
           <Form>
             <div className="mb-4">
-              <label className="block font-medium mb-2">Nombre del Proyecto</label>
+              <label className="block font-medium mb-2">Nombre proyecto</label>
               <Field
                 type="text"
                 name="nombreProyecto"
@@ -106,74 +70,67 @@ const ProjectForm = ({ onSubmit }) => {
             </div>
 
             <div className="mb-4">
-              <label className="block font-medium mb-2">Código del Proyecto</label>
+              <label className="block font-medium mb-2">Código</label>
               <Field
                 type="text"
-                name="projectCode"
+                name="codigoCliente"
                 className="w-full border border-gray-300 rounded-lg p-2"
-                placeholder="Código del Proyecto"
+                placeholder="Código del Cliente"
               />
               <ErrorMessage
-                name="projectCode"
+                name="codigoCliente"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />
             </div>
 
             <div className="mb-4">
-              <label className="block font-medium mb-2">Seleccionar Cliente</label>
+              <label className="block font-medium mb-2">Dirección del Proyecto</label>
               <Field
-                as="select"
-                name="ClientId"
+                type="text"
+                name="direccionCliente"
                 className="w-full border border-gray-300 rounded-lg p-2"
-              >
-                <option value="">Seleccione un cliente</option>
-                {clientes.map((cliente) => (
-                  <option key={cliente._id} value={cliente._id}>
-                    {cliente.name}
-                  </option>
-                ))}
-              </Field>
+                placeholder="Dirección del Proyecto"
+              />
               <ErrorMessage
-                name="ClientId"
+                name="direccionCliente"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />
             </div>
 
-            {/* Otros campos como dirección, email y código interno */}
             <div className="mb-4">
-              <label className="block font-medium mb-2">Email del Cliente</label>
+              <label className="block font-medium mb-2">Email</label>
               <Field
                 type="email"
-                name="email"
+                name="emailCliente"
                 className="w-full border border-gray-300 rounded-lg p-2"
                 placeholder="Email del Cliente"
               />
               <ErrorMessage
-                name="email"
+                name="emailCliente"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />
             </div>
 
-            {/* Dirección del Proyecto */}
-            <h3 className="font-bold mb-2">Dirección del Proyecto</h3>
             <div className="mb-4">
-              <label className="block font-medium mb-2">Calle</label>
+              <label className="block font-medium mb-2">Código interno del proyecto</label>
               <Field
                 type="text"
-                name="address.street"
+                name="codigoInterno"
                 className="w-full border border-gray-300 rounded-lg p-2"
-                placeholder="Calle"
+                placeholder="Código interno del Proyecto"
               />
               <ErrorMessage
-                name="address.street"
+                name="codigoInterno"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />
             </div>
-            {/* Otros campos de dirección */}
+
+            {status && <div className="text-green-500 mb-4">{status}</div>}
+
             <div className="flex justify-between">
               <button
                 type="reset"
@@ -189,7 +146,6 @@ const ProjectForm = ({ onSubmit }) => {
                 {isSubmitting ? "Guardando..." : "Guardar"}
               </button>
             </div>
-            {status && <div className="text-green-500 mt-4">{status}</div>}
           </Form>
         )}
       </Formik>

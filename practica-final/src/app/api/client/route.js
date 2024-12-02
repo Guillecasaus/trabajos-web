@@ -46,46 +46,30 @@ export async function GET() {
 
 export async function POST(req) {
   try {
-    // Extraemos los datos enviados desde el frontend
-    const { nombre, cif, address } = await req.json();
+    const { nombre, domicilioFiscal, cif } = await req.json();
 
-    // Validamos los campos obligatorios
-    if (!nombre || !address || !address.street || !address.number || !address.postal || !address.city || !address.province) {
+    if (!nombre || !domicilioFiscal) {
       return NextResponse.json(
-        { error: "Los campos 'nombre' y la dirección completa (calle, número, código postal, ciudad, provincia) son obligatorios." },
+        { error: "Los campos 'nombre' y 'domicilioFiscal' son obligatorios." },
         { status: 400 }
       );
     }
 
-    // Obtenemos el token JWT
-    const jwtToken = await getJWT();
+    const jwtToken = await getJWT(); // Asegurarte de usar await aquí.
 
-    // Construimos el cuerpo del cliente a enviar al backend
-    const body = {
-      name: nombre,
-      cif,
-      address: {
-        street: address.street,
-        number: address.number,
-        postal: address.postal,
-        city: address.city,
-        province: address.province,
-      },
-    };
-
-    console.log("Datos enviados al backend:", body); // Depuración
-
-    // Hacemos la solicitud al backend
     const response = await fetch(`${API_BASE_URL}/client`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${jwtToken}`,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        name: nombre,
+        domicilioFiscal,
+        cif,
+      }),
     });
 
-    // Manejo de la respuesta
     if (response.ok) {
       const responseData = await response.json();
       return NextResponse.json(responseData);
@@ -104,44 +88,3 @@ export async function POST(req) {
     );
   }
 }
-
-
-export async function DELETE(req, { params }) {
-  const { id } = params; // Asegúrate de usar destructuración correctamente
-
-  if (!id) {
-    return NextResponse.json(
-      { error: "ID del cliente no proporcionado" },
-      { status: 400 }
-    );
-  }
-
-  try {
-    // Lógica para eliminar el cliente, por ejemplo, enviando una solicitud al backend
-    const response = await fetch(`https://api-url/client/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${process.env.JWT_TOKEN}`, // O el método que uses para manejar JWT
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      return NextResponse.json(
-        { error: errorData.message || "Error al eliminar el cliente" },
-        { status: response.status }
-      );
-    }
-
-    return NextResponse.json(
-      { message: "Cliente eliminado con éxito." },
-      { status: 200 }
-    );
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Error interno del servidor." },
-      { status: 500 }
-    );
-  }
-}
-
