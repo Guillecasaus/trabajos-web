@@ -6,6 +6,31 @@ const ListaClientes = ({ onSelectCliente }) => {
   const [clientes, setClientes] = useState([]);
   const [error, setError] = useState("");
 
+  // Función para eliminar un cliente de la lista
+  const eliminarClienteDeLista = async (clienteId) => {
+    if (confirm("¿Estás seguro de que deseas eliminar este cliente?")) {
+      try {
+        const res = await fetch(`/api/client/${clienteId}`, {
+          method: "DELETE",
+        });
+
+        if (res.ok) {
+          // Filtrar el cliente eliminado de la lista local
+          setClientes((prevClientes) =>
+            prevClientes.filter((cliente) => cliente._id !== clienteId)
+          );
+          alert("Cliente eliminado con éxito");
+        } else {
+          const errorData = await res.json();
+          alert(errorData.error || "Error al eliminar el cliente");
+        }
+      } catch (error) {
+        console.error("Error al eliminar cliente:", error.message);
+        alert("Hubo un error al procesar tu solicitud");
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchClientes = async () => {
       try {
@@ -37,10 +62,20 @@ const ListaClientes = ({ onSelectCliente }) => {
           {clientes.map((cliente) => (
             <li
               key={cliente._id} // Usar `_id` como clave única
-              className="cursor-pointer p-2 border-b hover:bg-gray-100"
-              onClick={() => onSelectCliente(cliente._id)} // Usar `_id` para seleccionar el cliente
+              className="p-2 border-b hover:bg-gray-100 flex justify-between items-center"
             >
-              {cliente.name} {/* Usar `name` para mostrar el nombre del cliente */}
+              <span
+                className="cursor-pointer"
+                onClick={() => onSelectCliente(cliente._id)} // Usar `_id` para seleccionar el cliente
+              >
+                {cliente.name} {/* Usar `name` para mostrar el nombre del cliente */}
+              </span>
+              <button
+                className="text-red-500 hover:text-red-700"
+                onClick={() => eliminarClienteDeLista(cliente._id)} // Eliminar cliente
+              >
+                Eliminar
+              </button>
             </li>
           ))}
         </ul>

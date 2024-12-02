@@ -85,7 +85,7 @@ export async function PUT(req, { params }) {
 // Eliminar un cliente específico
 export async function DELETE(req, { params }) {
   try {
-    const { id } = params; // Obtener el ID de los parámetros
+    const { id } = params;
     const jwtToken = getJWT();
 
     const response = await fetch(`${API_BASE_URL}/client/${id}`, {
@@ -110,8 +110,10 @@ export async function DELETE(req, { params }) {
   } catch (error) {
     console.error("Error interno al eliminar el cliente:", error.message);
     return NextResponse.json(
-      { error: error.message || "Error interno del servidor" },
+      { error: error.message || "Error interno del servidor." },
       { status: 500 }
     );
   }
 }
+
+

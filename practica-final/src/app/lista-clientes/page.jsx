@@ -3,11 +3,18 @@
 import { useState } from "react";
 import ListaClientes from "../Components/ListaClientes";
 import DetallesCliente from "../Components/DetallesCliente";
+import ActualizarCliente from "../Components/ActualizarCliente"; // Importar el nuevo componente
 import Navbar from "../Components/Navbar";
 import Encabezado from "../Components/Encabezado";
 
 const ListaClientesPage = () => {
   const [clienteSeleccionadoId, setClienteSeleccionadoId] = useState(null);
+  const [modoEdicion, setModoEdicion] = useState(false); // Para alternar entre vista y edición
+
+  const handleClienteActualizado = (clienteActualizado) => {
+    alert("Cliente actualizado: " + clienteActualizado.name);
+    setModoEdicion(false); // Salir del modo de edición tras la actualización
+  };
 
   return (
     <>
@@ -26,10 +33,25 @@ const ListaClientesPage = () => {
               <ListaClientes onSelectCliente={setClienteSeleccionadoId} />
             </div>
 
-            {/* Detalles del cliente */}
+            {/* Detalles o edición del cliente */}
             <div className="w-2/3 p-4 overflow-y-auto">
               {clienteSeleccionadoId ? (
-                <DetallesCliente clienteId={clienteSeleccionadoId} />
+                modoEdicion ? (
+                  <ActualizarCliente
+                    clienteId={clienteSeleccionadoId}
+                    onClienteActualizado={handleClienteActualizado}
+                  />
+                ) : (
+                  <div>
+                    <DetallesCliente clienteId={clienteSeleccionadoId} />
+                    <button
+                      className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                      onClick={() => setModoEdicion(true)} // Activar modo edición
+                    >
+                      Editar Cliente
+                    </button>
+                  </div>
+                )
               ) : (
                 <p className="text-gray-500">Selecciona un cliente para ver sus detalles.</p>
               )}
