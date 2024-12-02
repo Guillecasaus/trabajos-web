@@ -13,11 +13,14 @@ function getJWT() {
 
   return jwtToken.value;
 }
-export async function GET() {
-  try {
-    const jwtToken = await getJWT(); // Asegurarte de usar await aquí.
 
-    const response = await fetch(`${API_BASE_URL}/client`, {
+// Obtener un cliente específico por ID
+export async function GET(req, { params }) {
+  try {
+    const { id } = params; // Obtener el ID de los parámetros
+    const jwtToken = getJWT();
+
+    const response = await fetch(`${API_BASE_URL}/client/${id}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${jwtToken}`,
@@ -30,7 +33,7 @@ export async function GET() {
     } else {
       const errorData = await response.json();
       return NextResponse.json(
-        { error: errorData.message || "Error al obtener los clientes" },
+        { error: errorData.message || "Error al obtener el cliente" },
         { status: response.status }
       );
     }
@@ -43,61 +46,35 @@ export async function GET() {
   }
 }
 
-
-export async function POST(req) {
+// Actualizar un cliente específico
+export async function PUT(req, { params }) {
   try {
-    // Extraemos los datos enviados desde el frontend
-    const { nombre, cif, address } = await req.json();
+    const { id } = params; // Obtener el ID de los parámetros
+    const jwtToken = getJWT();
 
-    // Validamos los campos obligatorios
-    if (!nombre || !address || !address.street || !address.number || !address.postal || !address.city || !address.province) {
-      return NextResponse.json(
-        { error: "Los campos 'nombre' y la dirección completa (calle, número, código postal, ciudad, provincia) son obligatorios." },
-        { status: 400 }
-      );
-    }
+    const updatedData = await req.json();
 
-    // Obtenemos el token JWT
-    const jwtToken = await getJWT();
-
-    // Construimos el cuerpo del cliente a enviar al backend
-    const body = {
-      name: nombre,
-      cif,
-      address: {
-        street: address.street,
-        number: address.number,
-        postal: address.postal,
-        city: address.city,
-        province: address.province,
-      },
-    };
-
-    console.log("Datos enviados al backend:", body); // Depuración
-
-    // Hacemos la solicitud al backend
-    const response = await fetch(`${API_BASE_URL}/client`, {
-      method: "POST",
+    const response = await fetch(`${API_BASE_URL}/client/${id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${jwtToken}`,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(updatedData),
     });
 
-    // Manejo de la respuesta
     if (response.ok) {
-      const responseData = await response.json();
-      return NextResponse.json(responseData);
+      const data = await response.json();
+      return NextResponse.json(data);
     } else {
       const errorData = await response.json();
       return NextResponse.json(
-        { error: errorData.message || "Error al crear el cliente" },
+        { error: errorData.message || "Error al actualizar el cliente" },
         { status: response.status }
       );
     }
   } catch (error) {
-    console.error("Error interno del servidor:", error.message);
+    console.error("Error interno al actualizar el cliente:", error.message);
     return NextResponse.json(
       { error: error.message || "Error interno del servidor" },
       { status: 500 }
@@ -105,3 +82,36 @@ export async function POST(req) {
   }
 }
 
+// Eliminar un cliente específico
+export async function DELETE(req, { params }) {
+  try {
+    const { id } = params; // Obtener el ID de los parámetros
+    const jwtToken = getJWT();
+
+    const response = await fetch(`${API_BASE_URL}/client/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    });
+
+    if (response.ok) {
+      return NextResponse.json(
+        { message: "Cliente eliminado con éxito." },
+        { status: 200 }
+      );
+    } else {
+      const errorData = await response.json();
+      return NextResponse.json(
+        { error: errorData.message || "Error al eliminar el cliente" },
+        { status: response.status }
+      );
+    }
+  } catch (error) {
+    console.error("Error interno al eliminar el cliente:", error.message);
+    return NextResponse.json(
+      { error: error.message || "Error interno del servidor" },
+      { status: 500 }
+    );
+  }
+}
