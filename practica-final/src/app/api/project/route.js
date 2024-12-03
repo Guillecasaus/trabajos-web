@@ -16,45 +16,38 @@ function getJWT() {
 
 export async function POST(req) {
   try {
-    // Extraemos los datos enviados desde el frontend
-    const {
-      projectName,
-      projectCode,
-      ClientId,
-      email,
-      address,
-    } = await req.json();
+    // Extraer y loggear los datos recibidos en la solicitud
+    const { name, projectCode, email, address, code, clientID } = await req.json();
+    console.log("Datos recibidos en API:", { name, projectCode, email, address, code, clientID });
 
-    // Validamos los campos obligatorios
+    // Validar los campos obligatorios
     if (
-      !projectName ||
+      !name ||
       !projectCode ||
-      !ClientId ||
       !email ||
-      !address?.street ||
-      !address?.number ||
-      !address?.postal ||
-      !address?.city ||
-      !address?.province
+      !address ||
+      !address.street ||
+      !address.number ||
+      !address.postal ||
+      !address.city ||
+      !address.province ||
+      !code ||
+      !clientID
     ) {
       return NextResponse.json(
-        {
-          error:
-            "Todos los campos del proyecto y la dirección completa (calle, número, código postal, ciudad, provincia) son obligatorios.",
-        },
+        { error: "Todos los campos son obligatorios y deben estar correctamente estructurados." },
         { status: 400 }
       );
     }
 
-    // Obtenemos el token JWT
+    // Obtener el JWT
     const jwtToken = getJWT();
 
-    // Construimos el cuerpo del proyecto a enviar al backend
+    // Preparar datos para la llamada al backend
     const body = {
-      projectName,
-      projectCode,
-      ClientId,
-      email,
+      name: name,
+      projectCode: projectCode,
+      email: email,
       address: {
         street: address.street,
         number: address.number,
@@ -62,11 +55,12 @@ export async function POST(req) {
         city: address.city,
         province: address.province,
       },
+      code: code,
+      clientID: clientID,
     };
+    console.log("Datos enviados al backend:", body);
 
-    console.log("Datos enviados al backend:", body); // Depuración
-
-    // Hacemos la solicitud al backend
+    // Hacer la llamada al backend
     const response = await fetch(`${API_BASE_URL}/project`, {
       method: "POST",
       headers: {
@@ -76,12 +70,16 @@ export async function POST(req) {
       body: JSON.stringify(body),
     });
 
-    // Manejo de la respuesta
+    console.log("Respuesta del backend:", response);
+
+    // Manejar la respuesta del backend
     if (response.ok) {
-      const responseData = await response.json();
-      return NextResponse.json(responseData, { status: 201 });
+      const data = await response.json();
+      console.log("Datos recibidos del backend:", data);
+      return NextResponse.json(data);
     } else {
       const errorData = await response.json();
+      console.error("Error desde el backend:", errorData);
       return NextResponse.json(
         { error: errorData.message || "Error al crear el proyecto" },
         { status: response.status }

@@ -33,6 +33,7 @@ const ModalConfirmacion = ({ mensaje, onConfirm }) => {
   );
 };
 
+// Función para enviar datos a la API
 const enviarProyectoAPI = async (values, setMensaje, setShowModal) => {
   try {
     const res = await fetch("/api/project", {
@@ -44,7 +45,6 @@ const enviarProyectoAPI = async (values, setMensaje, setShowModal) => {
     });
 
     if (res.ok) {
-      console.log("Datos enviados al servidor:", values);
       setMensaje("Proyecto creado con éxito");
       setShowModal(true);
     } else {
@@ -52,38 +52,31 @@ const enviarProyectoAPI = async (values, setMensaje, setShowModal) => {
       throw new Error(errorData.error || "Error al crear el proyecto");
     }
   } catch (error) {
-    console.error("Error al procesar la solicitud:", error.message);
     setMensaje("Hubo un error al procesar tu solicitud");
   }
 };
 
-const FormularioProyectos = ({ proyectoId }) => {
+const FormularioProyecto = () => {
   const [clientes, setClientes] = useState([]);
   const [mensaje, setMensaje] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchClientes = async () => {
       try {
         const res = await fetch("/api/client");
-        if (res.ok) {
-          const data = await res.json();
-          setClientes(data); // Guardar la lista de clientes
-        } else {
-          setError("Error al obtener la lista de clientes");
-        }
+        const data = await res.json();
+        setClientes(data || []);
       } catch (error) {
-        setError("Error al procesar la solicitud");
+        console.error("Error al obtener los clientes:", error.message);
       }
     };
-
     fetchClientes();
   }, []);
 
   const formik = useFormik({
     initialValues: {
-      nombreProyecto: "",
+      name: "",
       projectCode: "",
       email: "",
       address: {
@@ -94,12 +87,14 @@ const FormularioProyectos = ({ proyectoId }) => {
         province: "",
       },
       code: "",
-      ClientId: "",
+      clientID: "",
     },
     validationSchema: Yup.object({
-      nombreProyecto: Yup.string().required("El nombre del proyecto es obligatorio"),
+      name: Yup.string().required("El nombre del proyecto es obligatorio"),
       projectCode: Yup.string().required("El código del proyecto es obligatorio"),
-      email: Yup.string().email("Debe ser un email válido").required("El email es obligatorio"),
+      email: Yup.string()
+        .email("Debe ser un email válido")
+        .required("El email es obligatorio"),
       address: Yup.object().shape({
         street: Yup.string().required("La calle es obligatoria"),
         number: Yup.string().required("El número es obligatorio"),
@@ -107,11 +102,10 @@ const FormularioProyectos = ({ proyectoId }) => {
         city: Yup.string().required("La ciudad es obligatoria"),
         province: Yup.string().required("La provincia es obligatoria"),
       }),
-      code: Yup.string().required("El código interno es obligatorio"),
-      ClientId: Yup.string().required("Debe seleccionar un cliente"),
+      code: Yup.string().required("El código interno del proyecto es obligatorio"),
+      clientID: Yup.string().required("Selecciona un cliente"),
     }),
     onSubmit: async (values) => {
-      setMensaje("Guardando...");
       await enviarProyectoAPI(values, setMensaje, setShowModal);
       formik.resetForm();
     },
@@ -119,41 +113,39 @@ const FormularioProyectos = ({ proyectoId }) => {
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-gray-100 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">
-        {proyectoId ? "Editar Proyecto" : "Crear Proyecto"}
-      </h2>
+      <h2 className="text-2xl font-bold mb-4">Crear Proyecto</h2>
       {mensaje && (
         <p
-          className={`mb-4 text-center ${
-            mensaje.includes("éxito") ? "text-green-500" : "text-red-500"
-          }`}
+          className={`mb-4 text-center ${mensaje.includes("éxito") ? "text-green-500" : "text-red-500"
+            }`}
         >
           {mensaje}
         </p>
       )}
-      {error && <p className="text-red-500">{error}</p>}
       <form onSubmit={formik.handleSubmit} className="space-y-4">
+        {/* Nombre del Proyecto */}
         <div>
-          <label htmlFor="nombreProyecto" className="block text-sm font-medium mb-1">
+          <label htmlFor="name" className="block text-sm font-medium mb-1">
             Nombre del Proyecto*
           </label>
           <input
-            id="nombreProyecto"
+            id="name"
             type="text"
-            name="nombreProyecto"
-            value={formik.values.nombreProyecto}
+            name="name"
+            value={formik.values.name}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className="w-full p-2 border rounded-md"
           />
-          {formik.touched.nombreProyecto && formik.errors.nombreProyecto && (
-            <p className="text-red-500 text-sm">{formik.errors.nombreProyecto}</p>
+          {formik.touched.name && formik.errors.name && (
+            <p className="text-red-500 text-sm">{formik.errors.name}</p>
           )}
         </div>
 
+        {/* Código del Proyecto */}
         <div>
           <label htmlFor="projectCode" className="block text-sm font-medium mb-1">
-            Código del Proyecto*
+            Identificador del Proyecto*
           </label>
           <input
             id="projectCode"
@@ -169,33 +161,10 @@ const FormularioProyectos = ({ proyectoId }) => {
           )}
         </div>
 
-        <div>
-          <label htmlFor="ClientId" className="block text-sm font-medium mb-1">
-            Seleccionar Cliente*
-          </label>
-          <select
-            id="ClientId"
-            name="ClientId"
-            value={formik.values.ClientId}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full p-2 border rounded-md"
-          >
-            <option value="">Seleccione un cliente</option>
-            {clientes.map((cliente) => (
-              <option key={cliente._id} value={cliente._id}>
-                {cliente.name}
-              </option>
-            ))}
-          </select>
-          {formik.touched.ClientId && formik.errors.ClientId && (
-            <p className="text-red-500 text-sm">{formik.errors.ClientId}</p>
-          )}
-        </div>
-
+        {/* Email */}
         <div>
           <label htmlFor="email" className="block text-sm font-medium mb-1">
-            Email del Cliente*
+            Email*
           </label>
           <input
             id="email"
@@ -211,8 +180,8 @@ const FormularioProyectos = ({ proyectoId }) => {
           )}
         </div>
 
-        {/* Dirección del Proyecto */}
-        <h3 className="text-lg font-semibold mb-2">Dirección del Proyecto</h3>
+        {/* Dirección */}
+        <h3 className="text-lg font-semibold mb-2">Dirección</h3>
         <div>
           <label htmlFor="address.street" className="block text-sm font-medium mb-1">
             Calle*
@@ -230,7 +199,6 @@ const FormularioProyectos = ({ proyectoId }) => {
             <p className="text-red-500 text-sm">{formik.errors.address.street}</p>
           )}
         </div>
-
         <div>
           <label htmlFor="address.number" className="block text-sm font-medium mb-1">
             Número*
@@ -248,7 +216,6 @@ const FormularioProyectos = ({ proyectoId }) => {
             <p className="text-red-500 text-sm">{formik.errors.address.number}</p>
           )}
         </div>
-
         <div>
           <label htmlFor="address.postal" className="block text-sm font-medium mb-1">
             Código Postal*
@@ -266,7 +233,6 @@ const FormularioProyectos = ({ proyectoId }) => {
             <p className="text-red-500 text-sm">{formik.errors.address.postal}</p>
           )}
         </div>
-
         <div>
           <label htmlFor="address.city" className="block text-sm font-medium mb-1">
             Ciudad*
@@ -284,7 +250,6 @@ const FormularioProyectos = ({ proyectoId }) => {
             <p className="text-red-500 text-sm">{formik.errors.address.city}</p>
           )}
         </div>
-
         <div>
           <label htmlFor="address.province" className="block text-sm font-medium mb-1">
             Provincia*
@@ -303,6 +268,52 @@ const FormularioProyectos = ({ proyectoId }) => {
           )}
         </div>
 
+        {/* Código Interno */}
+        <div>
+          <label htmlFor="code" className="block text-sm font-medium mb-1">
+            Código Interno*
+          </label>
+          <input
+            id="code"
+            type="text"
+            name="code"
+            value={formik.values.code}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full p-2 border rounded-md"
+          />
+          {formik.touched.code && formik.errors.code && (
+            <p className="text-red-500 text-sm">{formik.errors.code}</p>
+          )}
+        </div>
+
+        {/* Cliente */}
+        <div>
+          <label htmlFor="clientID" className="block text-sm font-medium mb-1">
+            Cliente*
+          </label>
+          <select
+            id="clientID"
+            name="clientID"
+            value={formik.values.clientID}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full p-2 border rounded-md"
+          >
+            <option value="">Selecciona un cliente</option>
+            {clientes.map((cliente, index) => (
+              <option key={cliente.id || `cliente-${index}`} value={cliente.id}>
+                {cliente.name}
+              </option>
+            ))}
+          </select>
+
+          {formik.touched.clientID && formik.errors.clientID && (
+            <p className="text-red-500 text-sm">{formik.errors.clientID}</p>
+          )}
+        </div>
+
+        {/* Botones */}
         <div className="flex justify-end space-x-2">
           <button
             type="button"
@@ -315,20 +326,20 @@ const FormularioProyectos = ({ proyectoId }) => {
             type="submit"
             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
           >
-            {proyectoId ? "Actualizar Proyecto" : "Guardar"}
+            Guardar
           </button>
         </div>
       </form>
 
       {showModal && (
         <ModalConfirmacion
-          mensaje="Proyecto creado y guardado con éxito"
+          mensaje="Proyecto creado con éxito"
           onConfirm={(crearOtro) => {
             setShowModal(false);
             if (crearOtro) {
               formik.resetForm();
             } else {
-              window.location.href = "/proyectos";
+              window.location.href = "/Proyectos";
             }
           }}
         />
@@ -337,4 +348,4 @@ const FormularioProyectos = ({ proyectoId }) => {
   );
 };
 
-export default FormularioProyectos;
+export default FormularioProyecto;
