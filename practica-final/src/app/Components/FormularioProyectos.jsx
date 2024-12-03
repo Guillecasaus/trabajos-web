@@ -44,17 +44,22 @@ const enviarProyectoAPI = async (values, setMensaje, setShowModal) => {
       body: JSON.stringify(values),
     });
 
-    if (res.ok) {
-      setMensaje("Proyecto creado con éxito");
-      setShowModal(true);
-    } else {
-      const errorData = await res.json();
+    if (!res.ok) {
+      const errorData = await res.json(); // Parsear el error devuelto por el backend
+      console.error("Error devuelto por el backend:", errorData);
       throw new Error(errorData.error || "Error al crear el proyecto");
     }
+
+    const data = await res.json();
+    console.log("Proyecto creado con éxito:", data);
+    setMensaje("Proyecto creado con éxito");
+    setShowModal(true);
   } catch (error) {
-    setMensaje("Hubo un error al procesar tu solicitud");
+    console.error("Error al procesar la solicitud:", error.message);
+    setMensaje(error.message || "Hubo un error al procesar tu solicitud");
   }
 };
+
 
 const FormularioProyecto = () => {
   const [clientes, setClientes] = useState([]);
@@ -66,6 +71,7 @@ const FormularioProyecto = () => {
       try {
         const res = await fetch("/api/client");
         const data = await res.json();
+        console.log("Datos de clientes recibidos:", data); // Agregar esto para verificar los datos
         setClientes(data || []);
       } catch (error) {
         console.error("Error al obtener los clientes:", error.message);
@@ -73,6 +79,7 @@ const FormularioProyecto = () => {
     };
     fetchClientes();
   }, []);
+
 
   const formik = useFormik({
     initialValues: {
@@ -87,7 +94,7 @@ const FormularioProyecto = () => {
         province: "",
       },
       code: "",
-      clientID: "",
+      clientId: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("El nombre del proyecto es obligatorio"),
@@ -103,7 +110,7 @@ const FormularioProyecto = () => {
         province: Yup.string().required("La provincia es obligatoria"),
       }),
       code: Yup.string().required("El código interno del proyecto es obligatorio"),
-      clientID: Yup.string().required("Selecciona un cliente"),
+      clientId: Yup.string().required("Selecciona un cliente"),
     }),
     onSubmit: async (values) => {
       await enviarProyectoAPI(values, setMensaje, setShowModal);
@@ -289,27 +296,28 @@ const FormularioProyecto = () => {
 
         {/* Cliente */}
         <div>
-          <label htmlFor="clientID" className="block text-sm font-medium mb-1">
+          <label htmlFor="clientId" className="block text-sm font-medium mb-1">
             Cliente*
           </label>
           <select
-            id="clientID"
-            name="clientID"
-            value={formik.values.clientID}
+            id="clientId"
+            name="clientId"
+            value={formik.values.clientId}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className="w-full p-2 border rounded-md"
           >
             <option value="">Selecciona un cliente</option>
             {clientes.map((cliente, index) => (
-              <option key={cliente.id || `cliente-${index}`} value={cliente.id}>
+              <option key={cliente._id || `cliente-${index}`} value={cliente._id}>
                 {cliente.name}
               </option>
             ))}
           </select>
 
-          {formik.touched.clientID && formik.errors.clientID && (
-            <p className="text-red-500 text-sm">{formik.errors.clientID}</p>
+
+          {formik.touched.clientId && formik.errors.clientId && (
+            <p className="text-red-500 text-sm">{formik.errors.clientId}</p>
           )}
         </div>
 
@@ -339,7 +347,7 @@ const FormularioProyecto = () => {
             if (crearOtro) {
               formik.resetForm();
             } else {
-              window.location.href = "/Proyectos";
+              window.location.href = "/proyectos";
             }
           }}
         />

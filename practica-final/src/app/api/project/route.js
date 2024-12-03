@@ -16,11 +16,34 @@ function getJWT() {
 
 export async function POST(req) {
   try {
-    // Extraer y loggear los datos recibidos en la solicitud
-    const { name, projectCode, email, address, code, clientID } = await req.json();
-    console.log("Datos recibidos en API:", { name, projectCode, email, address, code, clientID });
+    // Extraemos los datos enviados desde el frontend
+    const {
+      name,
+      projectCode,
+      email,
+      address,
+      code,
+      clientId,
+    } = await req.json();
 
-    // Validar los campos obligatorios
+    console.log("Datos recibidos en la solicitud:", {
+      name,
+      projectCode,
+      email,
+      address,
+      code,
+      clientId,
+    });
+
+    // Validar si el clientID es un ObjectId válido (si usas MongoDB)
+    if (!clientId || !isValidObjectId(clientId)) {
+      return NextResponse.json(
+        { error: "El clientID proporcionado no es válido." },
+        { status: 422 }
+      );
+    }
+
+    // Validar los campos obligatorios del proyecto
     if (
       !name ||
       !projectCode ||
@@ -31,23 +54,25 @@ export async function POST(req) {
       !address.postal ||
       !address.city ||
       !address.province ||
-      !code ||
-      !clientID
+      !code
     ) {
       return NextResponse.json(
-        { error: "Todos los campos son obligatorios y deben estar correctamente estructurados." },
+        {
+          error:
+            "Todos los campos del proyecto y la dirección completa (calle, número, código postal, ciudad, provincia) son obligatorios.",
+        },
         { status: 400 }
       );
     }
 
-    // Obtener el JWT
+    // Obtenemos el token JWT
     const jwtToken = getJWT();
 
-    // Preparar datos para la llamada al backend
+    // Construimos el cuerpo del proyecto a enviar al backend
     const body = {
-      name: name,
-      projectCode: projectCode,
-      email: email,
+      name,
+      projectCode,
+      email,
       address: {
         street: address.street,
         number: address.number,
@@ -55,12 +80,13 @@ export async function POST(req) {
         city: address.city,
         province: address.province,
       },
-      code: code,
-      clientID: clientID,
+      code,
+      clientId, 
     };
-    console.log("Datos enviados al backend:", body);
 
-    // Hacer la llamada al backend
+    console.log("Datos enviados al backend:", body); // Depuración
+
+    // Hacemos la solicitud al backend
     const response = await fetch(`${API_BASE_URL}/project`, {
       method: "POST",
       headers: {
@@ -70,16 +96,14 @@ export async function POST(req) {
       body: JSON.stringify(body),
     });
 
-    console.log("Respuesta del backend:", response);
-
-    // Manejar la respuesta del backend
+    // Manejo de la respuesta
     if (response.ok) {
-      const data = await response.json();
-      console.log("Datos recibidos del backend:", data);
-      return NextResponse.json(data);
+      const responseData = await response.json();
+      console.log("Respuesta del backend:", responseData);
+      return NextResponse.json(responseData, { status: 201 });
     } else {
       const errorData = await response.json();
-      console.error("Error desde el backend:", errorData);
+      console.error("Error devuelto por el backend:", errorData);
       return NextResponse.json(
         { error: errorData.message || "Error al crear el proyecto" },
         { status: response.status }
@@ -92,4 +116,9 @@ export async function POST(req) {
       { status: 500 }
     );
   }
+}
+
+// Función para validar si un ObjectId es válido (ejemplo para MongoDB)
+function isValidObjectId(id) {
+  return /^[a-fA-F0-9]{24}$/.test(id);
 }
