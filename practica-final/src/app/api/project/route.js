@@ -122,3 +122,33 @@ export async function POST(req) {
 function isValidObjectId(id) {
   return /^[a-fA-F0-9]{24}$/.test(id);
 }
+
+export async function GET() {
+  try {
+    const jwtToken = await getJWT(); // Asegurarte de usar await aquí.
+
+    const response = await fetch(`${API_BASE_URL}/project`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return NextResponse.json(data);
+    } else {
+      const errorData = await response.json();
+      return NextResponse.json(
+        { error: errorData.message || "Error al obtener los proyectos" },
+        { status: response.status }
+      );
+    }
+  } catch (error) {
+    console.error("Error interno del servidor:", error.message);
+    return NextResponse.json(
+      { error: error.message || "Error interno del servidor" },
+      { status: 500 }
+    );
+  }
+}
