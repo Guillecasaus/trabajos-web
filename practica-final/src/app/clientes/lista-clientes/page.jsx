@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import ListaClientes from "../Components/ListaClientes";
-import DetallesCliente from "../Components/DetallesCliente";
-import ActualizarCliente from "../Components/ActualizarCliente"; // Importar el nuevo componente
-import Navbar from "../Components/Navbar";
-import Encabezado from "../Components/Encabezado";
+import ListaClientes from "../../Components/ListaClientes";
+import DetallesCliente from "../../Components/DetallesCliente";
+import ActualizarCliente from "../../Components/ActualizarCliente"; // Importar el nuevo componente
+import Navbar from "../../Components/Navbar";
+import Encabezado from "../../Components/Encabezado";
 
 const ListaClientesPage = () => {
   const [clienteSeleccionadoId, setClienteSeleccionadoId] = useState(null);

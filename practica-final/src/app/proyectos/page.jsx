@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../Components/Navbar";
 import Encabezado from "../Components/Encabezado";
-import FormularioProyectos from "../Components/FormularioProyectos";
+import FormularioProyectos from "../Components/ComponentesProyecto/FormularioProyectos";
 import { useRouter } from "next/navigation";
 
 const ProjectsPage = () => {

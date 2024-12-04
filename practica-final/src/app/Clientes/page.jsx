@@ -33,7 +33,7 @@ export default function CrearCliente() {
 
   const redirigirListaClientes = () => {
     if (hayClientes) {
-      router.push("/lista-clientes");
+      router.push("clientes/lista-clientes");
     } else {
       alert("No hay clientes registrados.");
     }

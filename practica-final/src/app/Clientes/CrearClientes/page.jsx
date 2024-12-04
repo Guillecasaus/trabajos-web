@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import FormularioCliente from "../Components/FormularioCliente";
-import Navbar from "../Components/Navbar";
-import Encabezado from "../Components/Encabezado";
-import styles from "../Styles/crearCliente.module.css"; 
+import FormularioCliente from "../../Components/FormularioCliente";
+import Navbar from "../../Components/Navbar";
+import Encabezado from "../../Components/Encabezado";
+import styles from "../../Styles/crearCliente.module.css"; 
 
 export default function CrearCliente() {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
