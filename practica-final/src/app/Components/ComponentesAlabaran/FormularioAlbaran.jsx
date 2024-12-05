@@ -43,16 +43,16 @@ const enviarAlbaranAPI = async (values, setMensaje, setShowModal) => {
       body: JSON.stringify(values),
     });
 
-    const responseText = await res.text(); // Obtén la respuesta completa en texto
+    const responseText = await res.text();
     console.log("Respuesta del servidor:", responseText);
 
     if (res.ok) {
-      const data = JSON.parse(responseText); // Intenta parsear el JSON si es válido
+      const data = JSON.parse(responseText);
       console.log("Datos enviados al servidor:", data);
       setMensaje("Albarán creado con éxito");
       setShowModal(true);
     } else {
-      const errorData = JSON.parse(responseText); // Error devuelto por el servidor
+      const errorData = JSON.parse(responseText);
       throw new Error(errorData.error || "Error al crear el albarán");
     }
   } catch (error) {
@@ -148,9 +148,8 @@ const FormularioAlbaran = () => {
       <h2 className="text-2xl font-bold mb-4">Crear Albarán</h2>
       {mensaje && (
         <p
-          className={`mb-4 text-center ${
-            mensaje.includes("éxito") ? "text-green-500" : "text-red-500"
-          }`}
+          className={`mb-4 text-center ${mensaje.includes("éxito") ? "text-green-500" : "text-red-500"
+            }`}
         >
           {mensaje}
         </p>
@@ -204,19 +203,24 @@ const FormularioAlbaran = () => {
 
         <div>
           <label htmlFor="format" className="block text-sm font-medium mb-1">
-            Formato* (material u hours)
+            Formato*
           </label>
-          <input
+          <select
             id="format"
             name="format"
             value={formData.format}
             onChange={handleChange}
             className="w-full p-2 border rounded-md"
-          />
+          >
+            <option value="">Selecciona un formato</option>
+            <option value="material">Material</option>
+            <option value="hours">Horas</option>
+          </select>
           {errors.format && (
             <p className="text-red-500 text-sm">{errors.format}</p>
           )}
         </div>
+
 
         {formData.format === "material" && (
           <div>
@@ -337,7 +341,7 @@ const FormularioAlbaran = () => {
                 workdate: "",
               });
             } else {
-              window.location.href = "/Albaranes";
+              window.location.href = "/albaranes";
             }
           }}
         />
