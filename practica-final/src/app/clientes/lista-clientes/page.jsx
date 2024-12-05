@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import ListaClientes from "../../Components/ListaClientes";
-import DetallesCliente from "../../Components/DetallesCliente";
-import ActualizarCliente from "../../Components/ActualizarCliente"; // Importar el nuevo componente
+import ListaClientes from "../../Components/ComponentesCliente/ListaClientes";
+import DetallesCliente from "../../Components/ComponentesCliente/DetallesCliente";
+import ActualizarCliente from "../../Components/ComponentesCliente/ActualizarCliente"; // Importar el nuevo componente
 import Navbar from "../../Components/Navbar";
 import Encabezado from "../../Components/Encabezado";
 

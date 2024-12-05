@@ -24,7 +24,7 @@ const Navbar = () => {
                     </Link>
                 </li>
                 <li>
-                    <Link href="/Albaranes" className={styles.navLink}>
+                    <Link href="/albaranes" className={styles.navLink}>
                         Albaranes
                     </Link>
                 </li>

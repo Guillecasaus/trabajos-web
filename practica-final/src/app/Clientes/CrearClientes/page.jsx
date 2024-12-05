@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import FormularioCliente from "../../Components/FormularioCliente";
+import FormularioCliente from "../../Components/ComponentesCliente/FormularioCliente";
 import Navbar from "../../Components/Navbar";
 import Encabezado from "../../Components/Encabezado";
 import styles from "../../Styles/crearCliente.module.css"; 

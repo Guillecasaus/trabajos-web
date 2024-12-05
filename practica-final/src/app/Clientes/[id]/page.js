@@ -1,4 +1,4 @@
-import FormularioCliente from "@/app/Components/FormularioCliente";
+import FormularioCliente from "@/app/Components/ComponentesCliente/FormularioCliente";
 
 export default function EditarClientePage({ params }) {
   const { id } = params; 
