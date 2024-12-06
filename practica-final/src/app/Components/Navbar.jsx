@@ -34,11 +34,6 @@ const Navbar = () => {
             Proveedores
           </Link>
         </li>
-        <li>
-          <Link href="/Ajustes" className={styles.navLink}>
-            Ajustes
-          </Link>
-        </li>
       </ul>
       {/* Botón de cierre de sesión */}
       <div className="mt-auto p-4">

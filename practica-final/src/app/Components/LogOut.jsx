@@ -5,15 +5,19 @@ import { useRouter } from "next/navigation";
 const LogOut = () => {
   const router = useRouter();
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
     try {
-      // Borra la cookie del JWT (asegúrate de que la cookie tenga el mismo dominio y path configurado)
-      "jwt=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      // Llama a la API para eliminar la cookie en el servidor
+      const response = await fetch("/api/logout", { method: "GET" });
 
-      // Redirige explícitamente a la página de inicio de sesión
-      router.push("/");
+      if (response.ok) {
+        // Redirige a la página de inicio de sesión
+        router.push("/login");
+      } else {
+        console.error("Error al cerrar sesión:", await response.json());
+      }
     } catch (error) {
-      console.error("Error al cerrar sesión:", error);
+      console.error("Error al gestionar la desconexión:", error);
     }
   };
 
