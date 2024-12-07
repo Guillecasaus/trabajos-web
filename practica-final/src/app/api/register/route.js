@@ -10,7 +10,7 @@ export async function POST(req) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ firstName, lastName, email, password }),
     });
-
+  
     if (response.ok) {
       const data = await response.json();
 
