@@ -38,7 +38,7 @@ const ListaClientes = ({ onSelectCliente }) => {
         if (res.ok) {
           const data = await res.json();
           console.log("Clientes recibidos:", data);
-          setClientes(data); // Asegúrate de establecer correctamente el estado
+          setClientes(data); 
         } else {
           const errorData = await res.json();
           setError(errorData.error || "Error al obtener los clientes");
@@ -61,18 +61,18 @@ const ListaClientes = ({ onSelectCliente }) => {
         <ul>
           {clientes.map((cliente) => (
             <li
-              key={cliente._id} // Usar `_id` como clave única
+              key={cliente._id} 
               className="p-2 border-b hover:bg-gray-100 flex justify-between items-center"
             >
               <span
                 className="cursor-pointer"
-                onClick={() => onSelectCliente(cliente._id)} // Usar `_id` para seleccionar el cliente
+                onClick={() => onSelectCliente(cliente._id)} 
               >
-                {cliente.name} {/* Usar `name` para mostrar el nombre del cliente */}
+                {cliente.name} 
               </span>
               <button
                 className="text-red-500 hover:text-red-700"
-                onClick={() => eliminarClienteDeLista(cliente._id)} // Eliminar cliente
+                onClick={() => eliminarClienteDeLista(cliente._id)} 
               >
                 Eliminar
               </button>
