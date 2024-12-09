@@ -68,12 +68,15 @@ export default function ListaAlbaranesPage() {
                         </div>
                         <button
                             onClick={() => {
-                                if (selectedIds.length === 1) {
-                                    handleDownloadPDF(selectedIds[0]); // Envía solo el ID seleccionado
+                                if (selectedIds.length > 0) {
+                                    selectedIds.forEach((id) => {
+                                        handleDownloadPDF(id);
+                                    });
                                 } else {
-                                    console.error("Selecciona un único albarán para descargar.");
+                                    console.error("Selecciona al menos un albarán para descargar.");
                                 }
                             }}
+
                             className={`bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 ${selectedIds.length === 0 && "opacity-50 cursor-not-allowed"
                                 }`}
                             disabled={selectedIds.length === 0}

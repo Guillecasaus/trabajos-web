@@ -31,9 +31,8 @@ const ActualizarCliente = ({ clienteId, onClienteActualizado }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    // Manejo específico para campos de dirección
     if (name.startsWith("address.")) {
-      const addressField = name.split(".")[1]; // Ejemplo: "street" de "address.street"
+      const addressField = name.split(".")[1]; 
       setCliente((prevCliente) => ({
         ...prevCliente,
         address: {
@@ -42,7 +41,6 @@ const ActualizarCliente = ({ clienteId, onClienteActualizado }) => {
         },
       }));
     } else {
-      // Manejo para campos no anidados
       setCliente((prevCliente) => ({
         ...prevCliente,
         [name]: value,
@@ -63,7 +61,7 @@ const ActualizarCliente = ({ clienteId, onClienteActualizado }) => {
       if (res.ok) {
         const data = await res.json();
         setMensaje("Cliente actualizado con éxito");
-        onClienteActualizado(data); // Llama al callback para notificar cambios
+        onClienteActualizado(data); 
       } else {
         const errorData = await res.json();
         setError(errorData.error || "Error al actualizar el cliente");
