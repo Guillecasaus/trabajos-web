@@ -15,7 +15,7 @@ function getJWT() {
 }
 export async function GET() {
   try {
-    const jwtToken = await getJWT(); // Asegurarte de usar await aquí.
+    const jwtToken = await getJWT();
 
     const response = await fetch(`${API_BASE_URL}/client`, {
       method: "GET",
@@ -46,10 +46,8 @@ export async function GET() {
 
 export async function POST(req) {
   try {
-    // Extraemos los datos enviados desde el frontend
     const { nombre, cif, address } = await req.json();
 
-    // Validamos los campos obligatorios
     if (!nombre || !address || !address.street || !address.number || !address.postal || !address.city || !address.province) {
       return NextResponse.json(
         { error: "Los campos 'nombre' y la dirección completa (calle, número, código postal, ciudad, provincia) son obligatorios." },
@@ -57,10 +55,8 @@ export async function POST(req) {
       );
     }
 
-    // Obtenemos el token JWT
     const jwtToken = await getJWT();
 
-    // Construimos el cuerpo del cliente a enviar al backend
     const body = {
       name: nombre,
       cif,
@@ -73,9 +69,8 @@ export async function POST(req) {
       },
     };
 
-    console.log("Datos enviados al backend:", body); // Depuración
+    console.log("Datos enviados al backend:", body); 
 
-    // Hacemos la solicitud al backend
     const response = await fetch(`${API_BASE_URL}/client`, {
       method: "POST",
       headers: {
@@ -85,7 +80,6 @@ export async function POST(req) {
       body: JSON.stringify(body),
     });
 
-    // Manejo de la respuesta
     if (response.ok) {
       const responseData = await response.json();
       return NextResponse.json(responseData);
@@ -107,7 +101,7 @@ export async function POST(req) {
 
 
 export async function DELETE(req, { params }) {
-  const { id } = params; // Asegúrate de usar destructuración correctamente
+  const { id } = params; 
 
   if (!id) {
     return NextResponse.json(
@@ -117,11 +111,10 @@ export async function DELETE(req, { params }) {
   }
 
   try {
-    // Lógica para eliminar el cliente, por ejemplo, enviando una solicitud al backend
     const response = await fetch(`https://api-url/client/${id}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${process.env.JWT_TOKEN}`, // O el método que uses para manejar JWT
+        Authorization: `Bearer ${process.env.JWT_TOKEN}`, 
       },
     });
 

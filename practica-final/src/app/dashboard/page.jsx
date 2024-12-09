@@ -41,11 +41,9 @@ export default function Home() {
     <>
       <Encabezado tituloPagina="Dashboard - Gestión de Clientes" />
       <div className="flex h-screen bg-gray-100">
-        {/* Fijar el ancho del Navbar */}
         <div className="w-64">
           <Navbar />
         </div>
-        {/* Contenido Principal */}
         <div className="flex-grow p-6">
           <h2 className="text-3xl font-bold text-gray-800  text-center mb-8">
             Panel de Gestión

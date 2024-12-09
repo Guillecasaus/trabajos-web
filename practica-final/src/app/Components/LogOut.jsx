@@ -7,11 +7,9 @@ const LogOut = () => {
 
   const handleLogOut = async () => {
     try {
-      // Llama a la API para eliminar la cookie en el servidor
       const response = await fetch("/api/logout", { method: "GET" });
 
       if (response.ok) {
-        // Redirige a la página de inicio de sesión
         router.push("/login");
       } else {
         console.error("Error al cerrar sesión:", await response.json());

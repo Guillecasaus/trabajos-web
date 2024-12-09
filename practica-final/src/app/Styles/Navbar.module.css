@@ -4,13 +4,13 @@
   left: 0;
   height: 100%;
   width: 260px;
-  background-color: #ffffff; /* Fondo blanco */
-  color: #1e293b; /* Texto oscuro para contraste */
+  background-color: #ffffff; 
+  color: #1e293b;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); 
 }
 
 .logo {
@@ -30,7 +30,7 @@
   margin-left: 8%;
   font-size: 0.75rem;
   font-weight: bold;
-  color: #1e293b; /* Texto oscuro */
+  color: #1e293b; 
   margin-top: 10px;
 }
 
@@ -43,7 +43,7 @@
 
 .navLink {
   text-decoration: none;
-  color: #1e293b; /* Texto oscuro */
+  color: #1e293b; 
   display: flex;
   align-items: center;
   padding: 10px 15px;
@@ -59,12 +59,12 @@
 }
 
 .navLink:hover {
-  background-color: #f3f4f6; /* Gris claro para hover */
-  color: #1e40af; /* Azul para resaltar */
+  background-color: #f3f4f6; 
+  color: #1e40af;
 }
 
 .navLink:active {
-  background-color: #e5e7eb; /* Azul más claro */
+  background-color: #e5e7eb; 
 }
 
 .mt-auto {

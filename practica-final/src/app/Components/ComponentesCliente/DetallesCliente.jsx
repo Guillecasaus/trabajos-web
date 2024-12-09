@@ -12,8 +12,8 @@ const DetallesCliente = ({ clienteId }) => {
         const res = await fetch(`/api/client/${clienteId}`);
         if (res.ok) {
           const data = await res.json();
-          console.log("Cliente recibido:", data); // Depuración
-          setCliente(data); // Almacenar el cliente recibido
+          console.log("Cliente recibido:", data); 
+          setCliente(data);
         } else {
           const errorData = await res.json();
           setError(errorData.error || "Error al obtener el cliente");

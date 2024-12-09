@@ -14,7 +14,6 @@ export async function POST(req) {
     if (response.ok) {
       const data = await response.json();
 
-      // Establecer la cookie JWT
       cookies().set("jwt", data.token, {
         httpOnly: true,
         secure: true,

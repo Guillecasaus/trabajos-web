@@ -45,12 +45,10 @@ const ProjectsPage = () => {
       <Encabezado tituloPagina="Proyectos" />
       <div className="container mx-auto p-4">
         <div className="flex flex-col lg:flex-row">
-          {/* Formulario de Proyectos */}
           <div className="w-full lg:w-2/3 p-4">
             <FormularioProyectos />
           </div>
 
-          {/* Sidebar */}
           <div className="w-full lg:w-1/3 p-4 bg-gray-100 rounded-md shadow-md">
             <div className="mb-6">
               <h3 className="text-lg font-bold">Opciones</h3>

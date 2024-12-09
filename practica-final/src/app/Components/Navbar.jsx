@@ -14,7 +14,6 @@ import {
 const Navbar = () => {
     return (
         <nav className={styles.navbar}>
-            {/* Logo */}
             <div className={styles.logo}>
                 <Link href="/dashboard">
                     <img
@@ -25,7 +24,6 @@ const Navbar = () => {
                 </Link>
             </div>
 
-            {/* Navegación */}
             <ul className={styles.navLinks}>
                 <h1 className={styles.logoText}>OVERVIEW</h1>
                 <li>
@@ -55,7 +53,6 @@ const Navbar = () => {
                 </li>
             </ul>
 
-            {/* Botón de Logout */}
             <div className="mt-auto p-4">
                 <LogOut />
             </div>

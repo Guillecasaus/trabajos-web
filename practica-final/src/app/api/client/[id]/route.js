@@ -14,10 +14,9 @@ function getJWT() {
   return jwtToken.value;
 }
 
-// Obtener un cliente específico por ID
 export async function GET(req, { params }) {
   try {
-    const { id } = params; // Obtener el ID de los parámetros
+    const { id } = params; 
     const jwtToken = getJWT();
 
     const response = await fetch(`${API_BASE_URL}/client/${id}`, {
@@ -46,10 +45,9 @@ export async function GET(req, { params }) {
   }
 }
 
-// Actualizar un cliente específico
 export async function PUT(req, { params }) {
   try {
-    const { id } = params; // Obtener el ID de los parámetros
+    const { id } = params;
     const jwtToken = getJWT();
 
     const updatedData = await req.json();
@@ -82,7 +80,6 @@ export async function PUT(req, { params }) {
   }
 }
 
-// Eliminar un cliente específico
 export async function DELETE(req, { params }) {
   try {
     const { id } = params;

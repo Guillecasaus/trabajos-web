@@ -51,9 +51,9 @@ const ListaAlbaranes = ({ selectedIds, setSelectedIds }) => {
 
   const handleSelectAll = () => {
     if (selectedIds.length === albaranes.length) {
-      setSelectedIds([]); // Deselecciona todo si todo estaba seleccionado
+      setSelectedIds([]); 
     } else {
-      setSelectedIds(albaranes.map((albaran) => albaran._id)); // Selecciona todos los IDs
+      setSelectedIds(albaranes.map((albaran) => albaran._id)); 
     }
   };
 
@@ -82,7 +82,6 @@ const ListaAlbaranes = ({ selectedIds, setSelectedIds }) => {
               key={albaran._id}
               className="hover:bg-gray-100 border-t border-gray-200"
             >
-              {/* Checkbox para seleccionar este albarán */}
               <td className="px-4 py-3">
                 <input
                   type="checkbox"
@@ -91,31 +90,26 @@ const ListaAlbaranes = ({ selectedIds, setSelectedIds }) => {
                 />
               </td>
 
-              {/* Código del Proyecto */}
               <td className="px-4 py-3 font-medium text-gray-900">
                 {albaran.projectId?.code || "-"}
               </td>
 
-              {/* Fecha */}
               <td className="px-4 py-3">
                 {new Date(albaran.createdAt).toLocaleDateString()}
               </td>
 
-              {/* Nombre del Proyecto */}
               <td className="px-4 py-3">
                 {typeof albaran.projectId === "object"
                   ? albaran.projectId.name
                   : "-"}
               </td>
 
-              {/* Nombre del Cliente */}
               <td className="px-4 py-3">
                 {typeof albaran.clientId === "object"
                   ? albaran.clientId.name
                   : "-"}
               </td>
 
-              {/* Código Interno */}
               <td className="px-4 py-3">
                 #{albaran._id.slice(-6)}
               </td>

@@ -5,7 +5,6 @@ const API_BASE_URL = "https://bildy-rpmaya.koyeb.app/api";
 
 export async function GET(req, context) {
   try {
-    // Desestructura el id desde context.params
     const id = context.params?.id;
 
     if (!id) {
@@ -15,7 +14,6 @@ export async function GET(req, context) {
       );
     }
 
-    // Obtén el token JWT desde las cookies
     const cookieStore = cookies();
     const jwtToken = cookieStore.get("jwt")?.value;
 
@@ -26,12 +24,11 @@ export async function GET(req, context) {
       );
     }
 
-    // Realiza la solicitud al API externo
     const response = await fetch(`${API_BASE_URL}/deliverynote/pdf/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/pdf",
-        Authorization: `Bearer ${jwtToken}`, // Envía el token en el encabezado
+        Authorization: `Bearer ${jwtToken}`, 
       },
     });
 

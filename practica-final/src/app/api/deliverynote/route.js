@@ -20,7 +20,6 @@ export async function POST(req) {
   try {
     console.log("Iniciando procesamiento de solicitud POST");
 
-    // Extraemos los datos enviados desde el frontend
     const {
       clientId,
       projectId,
@@ -41,15 +40,14 @@ export async function POST(req) {
       workdate,
     });
 
-    // Validamos los campos obligatorios
     if (
       !clientId ||
       !projectId ||
       !format ||
       !description ||
       !workdate ||
-      (format === "material" && !material) || // Validar material si el formato es material
-      (format === "hours" && !hours) // Validar horas si el formato es horas
+      (format === "material" && !material) || 
+      (format === "hours" && !hours) 
     ) {
       console.log("Validación fallida. Faltan campos obligatorios.");
       return NextResponse.json(
@@ -58,24 +56,21 @@ export async function POST(req) {
       );
     }
 
-    // Obtenemos el token JWT
     const jwtToken = await getJWT();
     console.log("JWT token obtenido exitosamente.");
 
-    // Construimos el cuerpo de la solicitud para enviar al backend
     const body = {
       clientId,
       projectId,
       format,
-      material: format === "material" ? material : undefined, // Incluimos material solo si el formato es material
-      hours: format === "hours" ? hours : undefined, // Incluimos horas solo si el formato es horas
+      material: format === "material" ? material : undefined, 
+      hours: format === "hours" ? hours : undefined, 
       description,
       workdate,
     };
 
     console.log("Cuerpo de la solicitud a enviar al backend:", body);
 
-    // Llamamos al backend
     const response = await fetch(`${API_BASE_URL}/deliverynote`, {
       method: "POST",
       headers: {
@@ -87,14 +82,13 @@ export async function POST(req) {
 
     console.log("Respuesta del backend, status:", response.status);
 
-    // Procesamos la respuesta del backend
     if (response.ok) {
       const data = await response.json();
       console.log("Datos recibidos del backend:", data);
       return NextResponse.json(data);
     } else {
       console.log("Error del backend, procesando mensaje de error...");
-      const errorText = await response.text(); // Capturamos el texto completo de la respuesta
+      const errorText = await response.text(); 
       console.log("Respuesta completa del backend (raw):", errorText);
 
       let errorData;
@@ -121,10 +115,8 @@ export async function POST(req) {
 
 export async function GET() {
   try {
-    // Obtenemos el token JWT
     const jwtToken = getJWT();
 
-    // Llamamos al backend
     const response = await fetch(`${API_BASE_URL}/deliverynote`, {
       method: "GET",
       headers: {

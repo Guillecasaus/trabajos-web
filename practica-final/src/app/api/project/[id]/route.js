@@ -15,7 +15,7 @@ function getJWT() {
 }
 export async function PUT(req, { params }) {
     try {
-      const { id } = params; // Obtener el ID del proyecto
+      const { id } = params; 
       const jwtToken = getJWT();
   
       const updatedData = await req.json();

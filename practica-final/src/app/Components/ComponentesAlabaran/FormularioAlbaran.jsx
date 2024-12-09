@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 
-// Componente de confirmación
 const ModalConfirmacion = ({ mensaje, onConfirm }) => {
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
@@ -78,7 +77,6 @@ const FormularioAlbaran = () => {
   const [mensaje, setMensaje] = useState("");
   const [showModal, setShowModal] = useState(false);
 
-  // Cargar clientes y proyectos
   useEffect(() => {
     const fetchClientes = async () => {
       try {
@@ -104,7 +102,6 @@ const FormularioAlbaran = () => {
     fetchProyectos();
   }, []);
 
-  // Validación personalizada
   const validate = () => {
     const newErrors = {};
     if (!formData.clientId) newErrors.clientId = "El cliente es obligatorio";

@@ -16,7 +16,6 @@ function getJWT() {
 
 export async function POST(req) {
   try {
-    // Extraemos los datos enviados desde el frontend
     const {
       name,
       projectCode,
@@ -35,7 +34,6 @@ export async function POST(req) {
       clientId,
     });
 
-    // Validar si el clientID es un ObjectId válido (si usas MongoDB)
     if (!clientId || !isValidObjectId(clientId)) {
       return NextResponse.json(
         { error: "El clientID proporcionado no es válido." },
@@ -43,7 +41,6 @@ export async function POST(req) {
       );
     }
 
-    // Validar los campos obligatorios del proyecto
     if (
       !name ||
       !projectCode ||
@@ -65,10 +62,8 @@ export async function POST(req) {
       );
     }
 
-    // Obtenemos el token JWT
     const jwtToken = getJWT();
 
-    // Construimos el cuerpo del proyecto a enviar al backend
     const body = {
       name,
       projectCode,
@@ -84,9 +79,8 @@ export async function POST(req) {
       clientId, 
     };
 
-    console.log("Datos enviados al backend:", body); // Depuración
+    console.log("Datos enviados al backend:", body); 
 
-    // Hacemos la solicitud al backend
     const response = await fetch(`${API_BASE_URL}/project`, {
       method: "POST",
       headers: {
@@ -96,7 +90,6 @@ export async function POST(req) {
       body: JSON.stringify(body),
     });
 
-    // Manejo de la respuesta
     if (response.ok) {
       const responseData = await response.json();
       console.log("Respuesta del backend:", responseData);
@@ -118,14 +111,13 @@ export async function POST(req) {
   }
 }
 
-// Función para validar si un ObjectId es válido (ejemplo para MongoDB)
 function isValidObjectId(id) {
   return /^[a-fA-F0-9]{24}$/.test(id);
 }
 
 export async function GET() {
   try {
-    const jwtToken = await getJWT(); // Asegurarte de usar await aquí.
+    const jwtToken = await getJWT(); 
 
     const response = await fetch(`${API_BASE_URL}/project`, {
       method: "GET",

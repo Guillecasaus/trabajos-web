@@ -1,16 +1,15 @@
-/* Archivo Styles/crearCliente.module.css */
 
 .contenedorPrincipal {
     display: flex;
     flex-direction: row;
-    gap: 20px; /* Espaciado entre columnas */
+    gap: 20px; 
     padding: 20px;
-    height: 0vh; /* Altura completa de la pantalla */
+    height: 0vh; 
     box-sizing: border-box;
   }
   
   .columnaIzquierda {
-    flex: 2; /* La columna izquierda ocupa más espacio */
+    flex: 2;
     padding: 20px;
     background-color: #ffffff;
     border-radius: 8px;
@@ -18,7 +17,7 @@
   }
   
   .columnaDerecha {
-    flex: 1; /* La columna derecha ocupa menos espacio */
+    flex: 1; 
     padding: 20px;
     background-color: #f8f9fa;
     border-radius: 8px;
