@@ -6,7 +6,6 @@ const ListaClientes = ({ onSelectCliente }) => {
   const [clientes, setClientes] = useState([]);
   const [error, setError] = useState("");
 
-  // Función para eliminar un cliente de la lista
   const eliminarClienteDeLista = async (clienteId) => {
     if (confirm("¿Estás seguro de que deseas eliminar este cliente?")) {
       try {
@@ -15,7 +14,6 @@ const ListaClientes = ({ onSelectCliente }) => {
         });
 
         if (res.ok) {
-          // Filtrar el cliente eliminado de la lista local
           setClientes((prevClientes) =>
             prevClientes.filter((cliente) => cliente._id !== clienteId)
           );

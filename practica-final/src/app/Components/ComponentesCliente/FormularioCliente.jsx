@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-// Componente de confirmación
 const ModalConfirmacion = ({ mensaje, onConfirm }) => {
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
@@ -145,7 +144,6 @@ const FormularioCliente = ({ clienteId }) => {
           )}
         </div>
 
-        {/* Campos de dirección */}
         <h3 className="text-lg font-semibold mb-2">Dirección</h3>
         <div>
           <label htmlFor="address.street" className="block text-sm font-medium mb-1">

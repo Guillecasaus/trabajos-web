@@ -43,20 +43,16 @@ export default function CrearCliente() {
     <>
       <Encabezado tituloPagina="Crear Cliente" />
       <div className="flex flex-col md:flex-row">
-        {/* Navbar */}
         <div className="w-full md:w-1/4">
           <Navbar />
         </div>
 
-        {/* Main Content */}
         <div className="w-full md:w-3/4 p-4">
           <div className="flex flex-col lg:flex-row">
-            {/* Formulario */}
             <div className="w-full lg:w-2/3 p-4">
               <FormularioCliente />
             </div>
 
-            {/* Sidebar */}
             <div className="w-full lg:w-1/3 p-4 bg-gray-100 rounded-md shadow-md">
               <div className="mb-6">
                 <h3 className="text-lg font-bold">Logo Cliente</h3>
