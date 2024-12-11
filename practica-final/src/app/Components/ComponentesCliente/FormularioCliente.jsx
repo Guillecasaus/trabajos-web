@@ -260,7 +260,7 @@ const FormularioCliente = ({ clienteId }) => {
             if (crearOtro) {
               formik.resetForm();
             } else {
-              window.location.href = "/Clientes";
+              window.location.href = "/clientes";
             }
           }}
         />

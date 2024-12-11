@@ -46,7 +46,6 @@ export const obtenerDetallesComics = async (comicId) => {
     }
 };
 
-//Obtener detalles de un personaje
 export const obtenerDetallesPersonaje = async (nombrePersonaje) => {
     try {
         const response = await fetch(`${baseUrl}/characters?name=${encodeURIComponent(nombrePersonaje)}&ts=${ts}&apikey=${publicKey}&hash=${hash}`);
